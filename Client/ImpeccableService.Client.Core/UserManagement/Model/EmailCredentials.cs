@@ -1,8 +1,8 @@
 ﻿namespace ImpeccableService.Client.Core.UserManagement.Model
 {
-    public class EmailRegistration
+    public class EmailCredentials
     {
-        public EmailRegistration(string email, string password)
+        public EmailCredentials(string email, string password)
         {
             Email = email;
             Password = password;

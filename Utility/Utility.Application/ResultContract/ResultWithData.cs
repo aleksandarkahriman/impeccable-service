@@ -15,6 +15,10 @@ namespace Utility.Application.ResultContract
             State = ResultState.Ok;
         }
 
+        public ResultWithData(Exception exception) : base(exception)
+        {
+        }
+
         public T Data { get; }
     }
 }

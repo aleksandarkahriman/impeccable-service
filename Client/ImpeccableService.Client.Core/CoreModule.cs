@@ -10,9 +10,9 @@ namespace ImpeccableService.Client.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            services.AddSingleton<UserService>();
-            services.AddSingleton<IUserService, UserService>(builder =>
-                builder.GetRequiredService<UserService>());
+            services.AddSingleton<AuthenticationService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>(builder =>
+                builder.GetRequiredService<AuthenticationService>());
 
             return services;
         }
