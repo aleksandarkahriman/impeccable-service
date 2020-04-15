@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ImpeccableService.Client.Core.UserManagement;
+using ImpeccableService.Client.Core.UserManagement.Dependency;
+using ImpeccableService.Client.Core.UserManagement.Dependency.Placeholder;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: InternalsVisibleTo("ImpeccableService.Client.Core.Test")]
@@ -11,10 +13,16 @@ namespace ImpeccableService.Client.Core
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
             services.AddSingleton<AuthenticationService>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>(builder =>
-                builder.GetRequiredService<AuthenticationService>());
+
+            services.AddPlaceholders();
 
             return services;
+        }
+
+        private static void AddPlaceholders(this IServiceCollection services)
+        {
+            services.AddSingleton<IAuthenticationRemoteRepository, AuthenticationRemoteRepositoryPlaceholder>();
+            services.AddSingleton<IUserSecureRepository, UserSecureRepositoryPlaceholder>();
         }
     }
 }

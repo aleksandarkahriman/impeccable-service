@@ -37,6 +37,8 @@ namespace Utility.Application.ResultContract
 
         public bool Success => State == ResultState.Ok;
 
+        public bool Failure => State != ResultState.Ok;
+
         public static Result Ok() => new Result();
     }
 }

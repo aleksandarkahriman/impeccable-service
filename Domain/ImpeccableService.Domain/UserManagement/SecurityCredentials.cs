@@ -10,7 +10,9 @@
         }
 
         public string AccessToken { get; }
+
         public string RefreshToken { get; }
+
         public string LogoutToken { get; }
     }
 }

@@ -7,8 +7,10 @@ namespace ImpeccableService.Client.Core.UserManagement.Dependency
 {
     public interface IAuthenticationRemoteRepository
     {
-        Task<Result> RegisterWithEmail(EmailCredentials emailCredentials);
+        Task<Result> RegisterWithEmail(EmailRegistration emailRegistration);
 
-        Task<ResultWithData<User>> LoginWithEmail(EmailCredentials emailCredentials);
+        Task<ResultWithData<AuthenticatedUser>> LoginWithEmail(EmailLogin emailLogin);
+
+        Task<ResultWithData<AuthenticatedUser>> RefreshToken(AuthenticatedUser user);
     }
 }

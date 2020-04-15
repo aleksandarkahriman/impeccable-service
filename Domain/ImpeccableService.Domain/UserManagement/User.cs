@@ -2,14 +2,11 @@
 {
     public class User
     {
-        public User(int id, SecurityCredentials securityCredentials)
+        public User(int id)
         {
             Id = id;
-            SecurityCredentials = securityCredentials;
         }
 
         public int Id { get; }
-
-        public SecurityCredentials SecurityCredentials { get; }
     }
 }
