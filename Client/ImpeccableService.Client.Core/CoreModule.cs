@@ -1,4 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using ImpeccableService.Client.Core.Offering;
+using ImpeccableService.Client.Core.Offering.Dependency;
+using ImpeccableService.Client.Core.Offering.Dependency.Placeholder;
 using ImpeccableService.Client.Core.UserManagement;
 using ImpeccableService.Client.Core.UserManagement.Dependency;
 using ImpeccableService.Client.Core.UserManagement.Dependency.Placeholder;
@@ -14,6 +17,9 @@ namespace ImpeccableService.Client.Core
         {
             services.AddSingleton<AuthenticationService>();
 
+            services.AddSingleton<VenueService>();
+            services.AddSingleton<MenuService>();
+
             services.AddPlaceholders();
 
             return services;
@@ -23,6 +29,9 @@ namespace ImpeccableService.Client.Core
         {
             services.AddSingleton<IAuthenticationRemoteRepository, AuthenticationRemoteRepositoryPlaceholder>();
             services.AddSingleton<IUserSecureRepository, UserSecureRepositoryPlaceholder>();
+
+            services.AddSingleton<IVenueRemoteRepository, VenueRemoteRepositoryPlaceholder>();
+            services.AddSingleton<IMenuRemoteRepository, MenuRemoteRepositoryPlaceholder>();
         }
     }
 }
