@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utility\Logger.Abstraction\Logger.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Utility\Utility.Application\Utility.Application.csproj" />
+    <ProjectReference Include="..\ImpeccableService.Backend.Core\ImpeccableService.Backend.Core.csproj" />
+  </ItemGroup>
+
+
+</Project>
