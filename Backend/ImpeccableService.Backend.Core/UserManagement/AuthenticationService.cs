@@ -13,12 +13,12 @@ namespace ImpeccableService.Backend.Core.UserManagement
     {
         private readonly IUserRepository _userRepository;
         private readonly IdentitySecurityFactory _identitySecurityFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthenticationService> _logger;
 
         public AuthenticationService(
             IUserRepository userRepository,
             IdentitySecurityFactory identitySecurityFactory,
-            ILogger logger)
+            ILogger<AuthenticationService> logger)
         {
             _userRepository = userRepository;
             _identitySecurityFactory = identitySecurityFactory;
@@ -32,21 +32,21 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var userExistsResult = await _userRepository.UserWithEmailExists(emailRegistration.Email);
             if (userExistsResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(userExistsResult.ErrorReason,
+                _logger.Warning(userExistsResult.ErrorReason,
                     $"User email existence check failed for user with email {emailRegistration.Email}.");
                 return new Result(userExistsResult.ErrorReason);
             }
 
             if (userExistsResult.Data)
             {
-                _logger.Info<AuthenticationService>($"User with email {emailRegistration.Email} already exists.");
+                _logger.Info($"User with email {emailRegistration.Email} already exists.");
                 return new Result(new RegisterWithEmailException(RegisterWithEmailException.ErrorCause.EmailExists));
             }
 
             var createResult = await _userRepository.Save(emailRegistration);
             if (createResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(createResult.ErrorReason, $"Creation of user with email {emailRegistration.Email} failed.");
+                _logger.Warning(createResult.ErrorReason, $"Creation of user with email {emailRegistration.Email} failed.");
                 return new Result(createResult.ErrorReason);
             }
             
@@ -62,7 +62,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var userResult = await _userRepository.Read(emailLogin.Email, passwordHash);
             if (userResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(userResult.ErrorReason, "User not found.");
+                _logger.Warning(userResult.ErrorReason, "User not found.");
                 return new ResultWithData<SecurityCredentials>(userResult.ErrorReason);
             }
 
@@ -80,7 +80,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var userResult = await _userRepository.ReadByRefreshToken(refreshToken.Token);
             if (userResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(userResult.ErrorReason, "User not found.");
+                _logger.Warning(userResult.ErrorReason, "User not found.");
                 return new ResultWithData<SecurityCredentials>(userResult.ErrorReason);
             }
 
@@ -94,7 +94,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var generateCredentialsResult = await _identitySecurityFactory.GenerateCredentials(user);
             if (generateCredentialsResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(generateCredentialsResult.ErrorReason,
+                _logger.Warning(generateCredentialsResult.ErrorReason,
                     $"Failed to generate credentials for user {user.Id}");
                 return new ResultWithData<SecurityCredentials>(generateCredentialsResult.ErrorReason);
             }
@@ -105,7 +105,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var authenticationSaveResult = await _userRepository.Save(authentication);
             if (authenticationSaveResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(authenticationSaveResult.ErrorReason, "Failed to save authentication.");
+                _logger.Warning(authenticationSaveResult.ErrorReason, "Failed to save authentication.");
                 return new ResultWithData<SecurityCredentials>(authenticationSaveResult.ErrorReason);
             }
 

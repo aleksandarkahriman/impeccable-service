@@ -2,20 +2,20 @@
 
 namespace Logger.Abstraction
 {
-    public interface ILogger
+    public interface ILogger<TSource>
     {
-        void Info<TSource>(string message);
+        void Info(string message);
 
-        void Event<TSource>(string message);
+        void Event(string message);
 
-        void Debug<TSource>(string message);
+        void Debug(string message);
 
-        void Warning<TSource>(Exception exception, string message);
+        void Warning(Exception exception, string message);
 
-        void Warning<TSource>(string message);
+        void Warning(string message);
 
-        void Error<TSource>(Exception exception, string message);
+        void Error(Exception exception, string message);
 
-        void Error<TSource>(string message);
+        void Error(string message);
     }
 }

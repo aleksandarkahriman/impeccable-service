@@ -8,9 +8,9 @@ namespace ImpeccableService.Backend.API.UserManagement
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(ILogger logger)
+        public AuthenticationController(ILogger<AuthenticationController> logger)
         {
             _logger = logger;
         }
@@ -18,7 +18,7 @@ namespace ImpeccableService.Backend.API.UserManagement
         [HttpPost("register")]
         public async Task<IActionResult> Register()
         {
-            _logger.Info<AuthenticationController>("User registration in progress.");
+            _logger.Info("User registration in progress.");
             return Created(string.Empty, null);
         }
     }

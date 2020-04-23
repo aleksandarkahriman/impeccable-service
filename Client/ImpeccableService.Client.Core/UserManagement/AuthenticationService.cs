@@ -13,12 +13,12 @@ namespace ImpeccableService.Client.Core.UserManagement
     {
         private readonly IAuthenticationRemoteRepository _authenticationRemoteRepository;
         private readonly IUserSecureRepository _userSecureRepository;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthenticationService> _logger;
 
         public AuthenticationService(
             IAuthenticationRemoteRepository authenticationRemoteRepository,
             IUserSecureRepository userSecureRepository,
-            ILogger logger)
+            ILogger<AuthenticationService> logger)
         {
             _authenticationRemoteRepository = authenticationRemoteRepository;
             _userSecureRepository = userSecureRepository;
@@ -30,21 +30,21 @@ namespace ImpeccableService.Client.Core.UserManagement
             var emailValidationResult = emailRegistration.Email.IsValidEmail();
             if (emailValidationResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(emailValidationResult.ErrorReason, "Email validation failed.");
+                _logger.Warning(emailValidationResult.ErrorReason, "Email validation failed.");
                 return new ResultWithData<User>(emailValidationResult.ErrorReason);
             }
 
             const int minimalPasswordLength = 5;
             if (emailRegistration.Password.Length < minimalPasswordLength)
             {
-                _logger.Warning<AuthenticationService>("Password validation failed.");
+                _logger.Warning("Password validation failed.");
                 return new ResultWithData<User>(new ArgumentException("Password must be at least 5 characters long."));
             }
 
             var registrationResult = await _authenticationRemoteRepository.RegisterWithEmail(emailRegistration);
             if (registrationResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(registrationResult.ErrorReason, "Registration failed.");
+                _logger.Warning(registrationResult.ErrorReason, "Registration failed.");
                 return new ResultWithData<User>(registrationResult.ErrorReason);
             }
 
@@ -56,21 +56,21 @@ namespace ImpeccableService.Client.Core.UserManagement
             var emailValidationResult = emailLogin.Email.IsValidEmail();
             if (emailValidationResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(emailValidationResult.ErrorReason, "Email validation failed.");
+                _logger.Warning(emailValidationResult.ErrorReason, "Email validation failed.");
                 return new ResultWithData<AuthenticatedUser>(emailValidationResult.ErrorReason);
             }
 
             var loginResult = await _authenticationRemoteRepository.LoginWithEmail(emailLogin);
             if (loginResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(loginResult.ErrorReason, "Login failed.");
+                _logger.Warning(loginResult.ErrorReason, "Login failed.");
                 return new ResultWithData<AuthenticatedUser>(loginResult.ErrorReason);
             }
 
             var writeResult = await _userSecureRepository.Write(loginResult.Data);
             if (writeResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(writeResult.ErrorReason, "Failed to write user.");
+                _logger.Warning(writeResult.ErrorReason, "Failed to write user.");
                 return new ResultWithData<AuthenticatedUser>(writeResult.ErrorReason);
             }
 
@@ -82,14 +82,14 @@ namespace ImpeccableService.Client.Core.UserManagement
             var refreshResult = await _authenticationRemoteRepository.RefreshToken(user);
             if (refreshResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(refreshResult.ErrorReason, "Failed to refresh token.");
+                _logger.Warning(refreshResult.ErrorReason, "Failed to refresh token.");
                 return new Result(refreshResult.ErrorReason);
             }
 
             var writeResult = await _userSecureRepository.Write(refreshResult.Data);
             if (writeResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(writeResult.ErrorReason, "Failed to write user.");
+                _logger.Warning(writeResult.ErrorReason, "Failed to write user.");
                 return new Result(writeResult.ErrorReason);
             }
 
@@ -101,7 +101,7 @@ namespace ImpeccableService.Client.Core.UserManagement
             var deleteResult = await _userSecureRepository.Delete(user);
             if (deleteResult.Failure)
             {
-                _logger.Warning<AuthenticationService>(deleteResult.ErrorReason, "Failed to delete user.");
+                _logger.Warning(deleteResult.ErrorReason, "Failed to delete user.");
                 return new Result(deleteResult.ErrorReason);
             }
 

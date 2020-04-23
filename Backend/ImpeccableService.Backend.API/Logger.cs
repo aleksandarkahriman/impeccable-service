@@ -1,51 +1,29 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using ILogger = Logger.Abstraction.ILogger;
 
 namespace ImpeccableService.Backend.API
 {
-    public class Logger : ILogger
+    public class Logger<TSource> : Logger.Abstraction.ILogger<TSource>
     {
-        private readonly ILogger<Logger> _logger;
+        private readonly ILogger<TSource> _logger;
 
-        public Logger(ILogger<Logger> logger)
+        public Logger(ILogger<TSource> logger)
         {
             _logger = logger;
         }
 
-        public void Info<TSource>(string message)
-        {
-            _logger.LogInformation(message);
-        }
+        public void Info(string message) => _logger.LogInformation(message);
 
-        public void Event<TSource>(string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Event(string message) => _logger.LogTrace(message);
 
-        public void Debug<TSource>(string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Debug(string message) => _logger.LogDebug(message);
 
-        public void Warning<TSource>(Exception exception, string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Warning(Exception exception, string message) => _logger.LogWarning(exception, message);
 
-        public void Warning<TSource>(string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Warning(string message) => _logger.LogWarning(new Exception(message), message);
 
-        public void Error<TSource>(Exception exception, string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Error(Exception exception, string message) => _logger.LogCritical(exception, message);
 
-        public void Error<TSource>(string message)
-        {
-            throw new NotImplementedException();
-        }
+        public void Error(string message) => _logger.LogCritical(new Exception(message), message);
     }
 }

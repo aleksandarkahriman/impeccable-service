@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Domain.UserManagement;
-using Logger.Abstraction;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
 using Utility.Application.ResultContract;
@@ -16,14 +15,11 @@ namespace ImpeccableService.Backend.Core.UserManagement
     internal class IdentitySecurityFactory
     {
         private readonly ISecurityEnvironmentVariables _securityEnvironmentVariables;
-        private readonly ILogger _logger;
 
         public IdentitySecurityFactory(
-            ISecurityEnvironmentVariables securityEnvironmentVariables,
-            ILogger logger)
+            ISecurityEnvironmentVariables securityEnvironmentVariables)
         {
             _securityEnvironmentVariables = securityEnvironmentVariables;
-            _logger = logger;
         }
 
         public string HashPassword(string password)

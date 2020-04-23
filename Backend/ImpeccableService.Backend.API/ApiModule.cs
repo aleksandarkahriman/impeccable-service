@@ -7,7 +7,7 @@ namespace ImpeccableService.Backend.API
     {
         public static IServiceCollection AddApi(this IServiceCollection services)
         {
-            services.AddSingleton<ILogger, Logger>();
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
             return services;
         }

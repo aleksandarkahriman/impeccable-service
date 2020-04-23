@@ -125,7 +125,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
 
             private readonly AuthenticationService _authenticationService;
 
-            private readonly ILogger _logger;
+            private readonly ILogger<LoginWithEmailMethod> _logger;
 
             public LoginWithEmailMethod(ITestOutputHelper testOutputHelper)
             {
@@ -142,7 +142,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 var provider = services.BuildServiceProvider();
 
                 _authenticationService = provider.GetRequiredService<AuthenticationService>();
-                _logger = provider.GetRequiredService<ILogger>();
+                _logger = provider.GetRequiredService<ILogger<LoginWithEmailMethod>>();
             }
 
             [Fact]
@@ -309,7 +309,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             {
                 const string salt = PasswordSalt;
 
-                _logger.Info<LoginWithEmailMethod>($"Salt for password hash is: {salt}");
+                _logger.Info($"Salt for password hash is: {salt}");
             
                 var hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                     password: password,
@@ -318,7 +318,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                     iterationCount: 10000,
                     numBytesRequested: 256 / 8));
 
-                _logger.Info<LoginWithEmailMethod>($"Hashed password is {hashedPassword}");
+                _logger.Info($"Hashed password is {hashedPassword}");
 
                 return hashedPassword;
             }

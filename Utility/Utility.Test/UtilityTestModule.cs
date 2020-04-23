@@ -8,7 +8,8 @@ namespace Utility.Test
     {
         public static IServiceCollection AddTestLogger(this IServiceCollection services, ITestOutputHelper testOutputHelper)
         {
-            services.AddSingleton<ILogger>(builder => new TestLogger(testOutputHelper));
+            services.AddSingleton(builder => testOutputHelper);
+            services.AddSingleton(typeof(ILogger<>), typeof(TestLogger<>));
             return services;
         }
     }
