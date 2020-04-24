@@ -13,6 +13,7 @@ namespace ImpeccableService.Backend.Core
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
             services.AddSingleton<AuthenticationService>();
+            services.AddSingleton<IAuthenticationService>(provider => provider.GetService<AuthenticationService>());
             services.AddSingleton<IdentitySecurityFactory>();
 
             services.AddPlaceholders();

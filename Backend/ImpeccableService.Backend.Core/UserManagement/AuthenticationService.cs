@@ -9,7 +9,7 @@ using Utility.Application.ResultContract;
 
 namespace ImpeccableService.Backend.Core.UserManagement
 {
-    internal class AuthenticationService
+    internal class AuthenticationService : IAuthenticationService
     {
         private readonly IUserRepository _userRepository;
         private readonly IdentitySecurityFactory _identitySecurityFactory;

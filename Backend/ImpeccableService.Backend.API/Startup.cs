@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Reflection;
+using AutoMapper;
 using ImpeccableService.Backend.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,8 +25,10 @@ namespace ImpeccableService.Backend.API
             services.AddLogging();
             services.AddCore();
             services.AddApi();
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(new UnhandledExceptionFilter()));
+            services.AddAutoMapper(new List<Assembly> {GetType().Assembly});
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
