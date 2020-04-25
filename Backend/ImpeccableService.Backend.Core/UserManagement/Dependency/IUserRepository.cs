@@ -9,11 +9,12 @@ namespace ImpeccableService.Backend.Core.UserManagement.Dependency
     {
         Task<ResultWithData<bool>> UserWithEmailExists(string email);
 
-        Task<ResultWithData<User>> Save(EmailRegistration emailRegistration);
+        Task<ResultWithData<User>> Create(User user);
 
         Task<ResultWithData<User>> Read(string email, string passwordHash);
 
-        Task<Result> Save(Authentication authentication);
+        Task<Result> Create(Authentication authentication);
+
         Task<ResultWithData<User>> ReadByRefreshToken(string refreshToken);
     }
 }

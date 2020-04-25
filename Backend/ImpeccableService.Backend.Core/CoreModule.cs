@@ -12,9 +12,9 @@ namespace ImpeccableService.Backend.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            services.AddSingleton<AuthenticationService>();
-            services.AddSingleton<IAuthenticationService>(provider => provider.GetService<AuthenticationService>());
-            services.AddSingleton<IdentitySecurityFactory>();
+            services.AddScoped<AuthenticationService>();
+            services.AddScoped<IAuthenticationService>(provider => provider.GetService<AuthenticationService>());
+            services.AddScoped<IdentitySecurityFactory>();
 
             services.AddPlaceholders();
 
@@ -23,8 +23,7 @@ namespace ImpeccableService.Backend.Core
 
         private static void AddPlaceholders(this IServiceCollection services)
         {
-            services.AddSingleton<IUserRepository, UserRepositoryPlaceholder>();
-            services.AddSingleton<ISecurityEnvironmentVariables, SecurityEnvironmentVariablesPlaceholder>();
+            services.AddScoped<ISecurityEnvironmentVariables, SecurityEnvironmentVariablesPlaceholder>();
         }
     }
 }

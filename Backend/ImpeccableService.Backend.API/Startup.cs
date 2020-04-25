@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using AutoMapper;
 using ImpeccableService.Backend.Core;
+using ImpeccableService.Backend.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,9 +25,14 @@ namespace ImpeccableService.Backend.API
         {
             services.AddLogging();
             services.AddCore();
+            services.AddDatabase();
             services.AddApi();
             services.AddControllers(options => options.Filters.Add(new UnhandledExceptionFilter()));
-            services.AddAutoMapper(new List<Assembly> {GetType().Assembly});
+            services.AddAutoMapper(new List<Assembly>
+            {
+                typeof(ApiModule).Assembly,
+                typeof(DatabaseModule).Assembly
+            });
         }
 
 

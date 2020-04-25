@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.Context;
+using ImpeccableService.Backend.Core.Test.UserManagement.Provider;
 using ImpeccableService.Backend.Core.UserManagement;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Error;
@@ -24,6 +25,8 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
     {
         public class RegisterWithEmailMethod
         {
+            private static readonly User ValidUser = UserModelProvider.ConstructTestUser();
+
             private readonly Mock<IUserRepository> _userRepositoryMock;
 
             private readonly AuthenticationService _authenticationService;
@@ -81,14 +84,14 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
-                _userRepositoryMock.Setup(mock => mock.Save(emailRegistrationRequest.Model))
-                    .ReturnsAsync(new ResultWithData<User>(new User(1)));
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<User>()))
+                    .ReturnsAsync(new ResultWithData<User>(ValidUser));
             
                 // Act
                 await _authenticationService.RegisterWithEmail(emailRegistrationRequest);
             
                 // Assert
-                _userRepositoryMock.Verify(mock => mock.Save(emailRegistrationRequest.Model), Times.Once);
+                _userRepositoryMock.Verify(mock => mock.Create(It.IsAny<User>()), Times.Once);
             }
 
             [Fact]
@@ -100,7 +103,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
                 var expectedError = new Exception("Email check failed.");
-                _userRepositoryMock.Setup(mock => mock.Save(emailRegistrationRequest.Model))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<User>()))
                     .ReturnsAsync(new ResultWithData<User>(expectedError));
 
                 // Act
@@ -117,7 +120,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
 
             private const string SecurityCredentialsSecret = "SuperSecureWellGuardedSecret";
 
-            private static readonly User ValidUser = new User(1);
+            private static readonly User ValidUser = UserModelProvider.ConstructTestUser();
 
             private readonly Mock<IUserRepository> _userRepositoryMock;
 
@@ -162,7 +165,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _securityEnvironmentVariablesMock.Setup(mock => mock.SecurityCredentialsSecret())
                     .ReturnsAsync(SecurityCredentialsSecret);
 
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(Result.Ok);
 
                 // Act
@@ -209,7 +212,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _securityEnvironmentVariablesMock.Setup(mock => mock.SecurityCredentialsSecret())
                     .ReturnsAsync(SecurityCredentialsSecret);
 
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(Result.Ok);
 
                 // Act
@@ -243,7 +246,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _securityEnvironmentVariablesMock.Setup(mock => mock.SecurityCredentialsSecret())
                     .ReturnsAsync(SecurityCredentialsSecret);
 
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(Result.Ok);
 
                 // Act
@@ -269,14 +272,14 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _securityEnvironmentVariablesMock.Setup(mock => mock.SecurityCredentialsSecret())
                     .ReturnsAsync(SecurityCredentialsSecret);
 
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(Result.Ok);
 
                 // Act
                 await _authenticationService.LoginWithEmail(emailLoginRequest);
 
                 // Assert
-                _userRepositoryMock.Verify(mock => mock.Save(It.IsAny<Authentication>()), Times.Once);
+                _userRepositoryMock.Verify(mock => mock.Create(It.IsAny<Authentication>()), Times.Once);
             }
 
             [Fact]
@@ -295,7 +298,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                     .ReturnsAsync(SecurityCredentialsSecret);
 
                 var expectedError = new Exception("Failed to save authentication.");
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(new Result(expectedError));
 
                 // Act
@@ -334,7 +337,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             private const string ValidRefreshToken =
                 "EomDBo1erZH+2590rE3CYaZfWUnSOytku0Amd43Qcuyg0Xqjs/A88KDbinw8wgdYKvY2G72JtRdOT1YB64FGzQ==";
 
-            private static readonly User ValidUser = new User(1);
+            private static readonly User ValidUser = UserModelProvider.ConstructTestUser();
 
             private readonly Mock<IUserRepository> _userRepositoryMock;
 
@@ -390,7 +393,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                 _securityEnvironmentVariablesMock.Setup(mock => mock.SecurityCredentialsSecret())
                     .ReturnsAsync(SecurityCredentialsSecret);
 
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(Result.Ok);
 
                 // Act
@@ -414,7 +417,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                     .ReturnsAsync(SecurityCredentialsSecret);
 
                 var expectedError = new Exception("Failed to save authentication.");
-                _userRepositoryMock.Setup(mock => mock.Save(It.IsAny<Authentication>()))
+                _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<Authentication>()))
                     .ReturnsAsync(new Result(expectedError));
 
                 // Act

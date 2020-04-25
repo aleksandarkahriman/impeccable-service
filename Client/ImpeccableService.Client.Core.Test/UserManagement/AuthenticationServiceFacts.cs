@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ImpeccableService.Client.Core.Test.UserManagement.Provider;
 using ImpeccableService.Client.Core.UserManagement;
 using ImpeccableService.Client.Core.UserManagement.Dependency;
 using ImpeccableService.Client.Core.UserManagement.Model;
@@ -100,8 +101,7 @@ namespace ImpeccableService.Client.Core.Test.UserManagement
 
         public class LoginWithEmailMethod
         {
-            private static readonly AuthenticatedUser ValidUser =
-                new AuthenticatedUser(1, new SecurityCredentials("accessToken", "refreshToken", "logoutToken"));
+            private static readonly AuthenticatedUser ValidUser = UserModelProvider.ConstructValidUser();
 
             private readonly Mock<IAuthenticationRemoteRepository> _authenticationRemoteRepositoryMock;
 
@@ -213,11 +213,9 @@ namespace ImpeccableService.Client.Core.Test.UserManagement
 
         public class RefreshTokenMethod
         {
-            private static readonly AuthenticatedUser ValidUser =
-                new AuthenticatedUser(1, new SecurityCredentials("accessToken", "refreshToken", "logoutToken"));
+            private static readonly AuthenticatedUser ValidUser = UserModelProvider.ConstructValidUser();
 
-            private static readonly AuthenticatedUser RefreshedValidUser =
-                new AuthenticatedUser(1, new SecurityCredentials("refreshedAccessToken", "refreshToken", "logoutToken"));
+            private static readonly AuthenticatedUser RefreshedValidUser = UserModelProvider.ConstructRefreshedValidUser();
 
             private readonly Mock<IAuthenticationRemoteRepository> _authenticationRemoteRepositoryMock;
 
@@ -309,8 +307,7 @@ namespace ImpeccableService.Client.Core.Test.UserManagement
 
         public class LogoutMethod
         {
-            private static readonly AuthenticatedUser ValidUser =
-                new AuthenticatedUser(1, new SecurityCredentials("accessToken", "refreshToken", "logoutToken"));
+            private static readonly AuthenticatedUser ValidUser = UserModelProvider.ConstructValidUser();
 
             private readonly Mock<IUserSecureRepository> _userSecureRepositoryMock;
 

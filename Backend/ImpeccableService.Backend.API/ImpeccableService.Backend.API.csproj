@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\Utility\Logger.Abstraction\Logger.Abstraction.csproj" />
     <ProjectReference Include="..\..\Utility\Utility.Application\Utility.Application.csproj" />
     <ProjectReference Include="..\ImpeccableService.Backend.Core\ImpeccableService.Backend.Core.csproj" />
+    <ProjectReference Include="..\ImpeccableService.Backend.Database\ImpeccableService.Backend.Database.csproj" />
   </ItemGroup>
 
 

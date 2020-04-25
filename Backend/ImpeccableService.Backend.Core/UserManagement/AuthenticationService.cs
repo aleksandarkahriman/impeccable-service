@@ -43,7 +43,9 @@ namespace ImpeccableService.Backend.Core.UserManagement
                 return new Result(new RegisterWithEmailException(RegisterWithEmailException.ErrorCause.EmailExists));
             }
 
-            var createResult = await _userRepository.Save(emailRegistration);
+            var user = new User(emailRegistration.Email, _identitySecurityFactory.HashPassword(emailRegistration.Password));
+
+            var createResult = await _userRepository.Create(user);
             if (createResult.Failure)
             {
                 _logger.Warning(createResult.ErrorReason, $"Creation of user with email {emailRegistration.Email} failed.");
@@ -102,7 +104,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             var securityCredentials = generateCredentialsResult.Data;
 
             var authentication = new Authentication(user, securityCredentials);
-            var authenticationSaveResult = await _userRepository.Save(authentication);
+            var authenticationSaveResult = await _userRepository.Create(authentication);
             if (authenticationSaveResult.Failure)
             {
                 _logger.Warning(authenticationSaveResult.ErrorReason, "Failed to save authentication.");
