@@ -7,5 +7,7 @@ namespace ImpeccableService.Backend.Core.UserManagement.Dependency
         string PasswordHashSalt();
 
         Task<string> SecurityCredentialsSecret();
+
+        string DatabaseConnectionString();
     }
 }

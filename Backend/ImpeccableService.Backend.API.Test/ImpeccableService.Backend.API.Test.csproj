@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Utility\Utility.Test\Utility.Test.csproj" />
     <ProjectReference Include="..\ImpeccableService.Backend.API\ImpeccableService.Backend.API.csproj" />
+    <ProjectReference Include="..\ImpeccableService.Backend.Database\ImpeccableService.Backend.Database.csproj" />
   </ItemGroup>
 
 </Project>

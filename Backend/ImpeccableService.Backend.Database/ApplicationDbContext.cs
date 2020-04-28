@@ -8,8 +8,6 @@ namespace ImpeccableService.Backend.Database
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
         }
 
         public DbSet<UserEntity> Users { get; set; }

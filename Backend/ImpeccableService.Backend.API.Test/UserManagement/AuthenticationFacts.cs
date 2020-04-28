@@ -12,11 +12,11 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
 {
     public class AuthenticationFacts
     {
-        public class Registration : IClassFixture<EnvironmentFactory>
+        public class EmailRegistration : IClassFixture<EnvironmentFactory>
         {
             private readonly EnvironmentFactory _factory;
 
-            public Registration(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
+            public EmailRegistration(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
             {
                 _factory = factory;
 
@@ -41,6 +41,38 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            }
+        }
+
+        public class EmailLogin : IClassFixture<EnvironmentFactory>
+        {
+            private readonly EnvironmentFactory _factory;
+
+            public EmailLogin(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
+            {
+                _factory = factory;
+
+                _factory.ConfigureServices(services =>
+                {
+                    services.AddTestLogger(testOutputHelper);
+                });
+            }
+
+            [Fact]
+            public async Task ReturnsOkStatus()
+            {
+                // Arrange
+                var client = _factory.CreateClient();
+
+                var emailLogin = new EmailLoginDto("user@domain.com", "password");
+                var body = JsonConvert.SerializeObject(emailLogin);
+                var content = new StringContent(body, Encoding.UTF8, "application/json");
+
+                // Act
+                var response = await client.PostAsync("/api/authentication/login", content);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
     }
