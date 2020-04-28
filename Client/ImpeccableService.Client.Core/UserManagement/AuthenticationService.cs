@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ImpeccableService.Client.Core.UserManagement.Dependency;
 using ImpeccableService.Client.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Client.Domain.UserManagement;
 using Logger.Abstraction;
 using Utility.Application.Extension;
 using Utility.Application.ResultContract;

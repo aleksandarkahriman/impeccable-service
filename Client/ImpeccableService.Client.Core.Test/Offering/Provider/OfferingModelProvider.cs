@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ImpeccableService.Domain.Offering;
+using ImpeccableService.Client.Domain.Offering;
 
 namespace ImpeccableService.Client.Core.Test.Offering.Provider
 {

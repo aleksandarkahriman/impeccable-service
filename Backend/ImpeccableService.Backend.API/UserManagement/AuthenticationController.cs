@@ -3,7 +3,7 @@ using AutoMapper;
 using ImpeccableService.Backend.API.UserManagement.Dto;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.UserManagement;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Logger.Abstraction;
 using Microsoft.AspNetCore.Mvc;
 

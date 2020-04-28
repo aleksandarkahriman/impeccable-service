@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ImpeccableService.Client.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Client.Domain.UserManagement;
 using Utility.Application.ResultContract;
 
 namespace ImpeccableService.Client.Core.UserManagement.Dependency.Placeholder

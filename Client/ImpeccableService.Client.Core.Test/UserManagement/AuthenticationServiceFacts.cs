@@ -4,7 +4,7 @@ using ImpeccableService.Client.Core.Test.UserManagement.Provider;
 using ImpeccableService.Client.Core.UserManagement;
 using ImpeccableService.Client.Core.UserManagement.Dependency;
 using ImpeccableService.Client.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Client.Domain.UserManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Utility.Application.ResultContract;

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Utility.Application.ResultContract;
 
 namespace ImpeccableService.Backend.Core.UserManagement.Dependency

@@ -8,7 +8,7 @@ using ImpeccableService.Backend.Core.UserManagement;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Error;
 using ImpeccableService.Backend.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Logger.Abstraction;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.DependencyInjection;

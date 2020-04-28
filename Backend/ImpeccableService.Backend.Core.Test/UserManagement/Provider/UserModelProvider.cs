@@ -1,4 +1,4 @@
-﻿using ImpeccableService.Domain.UserManagement;
+﻿using ImpeccableService.Backend.Domain.UserManagement;
 
 namespace ImpeccableService.Backend.Core.Test.UserManagement.Provider
 {

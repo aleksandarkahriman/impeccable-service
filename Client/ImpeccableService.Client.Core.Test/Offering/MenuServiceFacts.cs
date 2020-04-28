@@ -2,7 +2,7 @@
 using ImpeccableService.Client.Core.Offering;
 using ImpeccableService.Client.Core.Offering.Dependency;
 using ImpeccableService.Client.Core.Test.Offering.Provider;
-using ImpeccableService.Domain.Offering;
+using ImpeccableService.Client.Domain.Offering;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Utility.Application.ResultContract;

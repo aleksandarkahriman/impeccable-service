@@ -1,5 +1,5 @@
 ﻿using ImpeccableService.Client.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Client.Domain.UserManagement;
 
 namespace ImpeccableService.Client.Core.Test.UserManagement.Provider
 {

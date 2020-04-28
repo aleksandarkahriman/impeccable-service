@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ImpeccableService.Backend.API.UserManagement.Dto;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 
 namespace ImpeccableService.Backend.API
 {

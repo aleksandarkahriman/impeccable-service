@@ -3,7 +3,7 @@ using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Error;
 using ImpeccableService.Backend.Core.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Logger.Abstraction;
 using Utility.Application.ResultContract;
 

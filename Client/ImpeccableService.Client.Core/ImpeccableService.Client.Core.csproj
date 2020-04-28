@@ -9,9 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\ImpeccableService.Domain\ImpeccableService.Domain.csproj" />
     <ProjectReference Include="..\..\Utility\Logger.Abstraction\Logger.Abstraction.csproj" />
     <ProjectReference Include="..\..\Utility\Utility.Application\Utility.Application.csproj" />
+    <ProjectReference Include="..\ImpeccableService.Client.Domain\ImpeccableService.Client.Domain.csproj" />
   </ItemGroup>
 
 </Project>

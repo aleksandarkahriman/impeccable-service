@@ -4,7 +4,7 @@ using AutoMapper;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Model;
 using ImpeccableService.Backend.Database.UserManagement.Model;
-using ImpeccableService.Domain.UserManagement;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Microsoft.EntityFrameworkCore;
 using Utility.Application.ResultContract;
 
