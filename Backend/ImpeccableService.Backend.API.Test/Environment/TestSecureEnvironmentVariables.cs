@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 
-namespace ImpeccableService.Backend.API.Test
+namespace ImpeccableService.Backend.API.Test.Environment
 {
     public class TestSecureEnvironmentVariables : ISecurityEnvironmentVariables
     {

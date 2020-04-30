@@ -11,5 +11,7 @@ namespace ImpeccableService.Backend.Database
         }
 
         public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<SessionEntity> Sessions { get; set; }
     }
 }

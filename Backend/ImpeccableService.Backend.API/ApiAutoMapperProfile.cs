@@ -9,6 +9,8 @@ namespace ImpeccableService.Backend.API
         public ApiAutoMapperProfile()
         {
             CreateMap<EmailRegistrationDto, EmailRegistration>();
+            CreateMap<EmailLoginDto, EmailLogin>();
+            CreateMap<SecurityCredentials, AuthenticationCredentialsDto>();
         }
     }
 }

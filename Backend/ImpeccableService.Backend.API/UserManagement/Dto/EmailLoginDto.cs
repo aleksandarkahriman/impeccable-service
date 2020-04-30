@@ -4,6 +4,10 @@ namespace ImpeccableService.Backend.API.UserManagement.Dto
 {
     public class EmailLoginDto
     {
+        public EmailLoginDto()
+        {
+        }
+
         public EmailLoginDto(string email, string password)
         {
             Email = email;

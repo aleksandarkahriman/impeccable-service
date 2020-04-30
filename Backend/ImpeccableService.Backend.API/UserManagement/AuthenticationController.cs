@@ -39,5 +39,18 @@ namespace ImpeccableService.Backend.API.UserManagement
                 ? Created(string.Empty, null)
                 : (IActionResult)BadRequest();
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AuthenticationCredentialsDto>> Login(EmailLoginDto emailLoginDto)
+        {
+            _logger.Info($"Email login in progress for {emailLoginDto.Email}.");
+
+            var emailLogin = _mapper.Map<EmailLogin>(emailLoginDto);
+            var loginResult = await _authenticationService.LoginWithEmail(new RequestContext<EmailLogin>(emailLogin));
+
+            var authenticationCredentials = _mapper.Map<AuthenticationCredentialsDto>(loginResult.Data);
+
+            return Ok(authenticationCredentials);
+        }
     }
 }

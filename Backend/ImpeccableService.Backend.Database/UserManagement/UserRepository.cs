@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
@@ -47,9 +48,13 @@ namespace ImpeccableService.Backend.Database.UserManagement
                 : new ResultWithData<User>(new KeyNotFoundException("User not found."));
         }
 
-        public Task<Result> Create(Authentication authentication)
+        public async Task<Result> Create(Authentication authentication)
         {
-            throw new System.NotImplementedException();
+            var session = new SessionEntity(authentication);
+            await _dbContext.Sessions.AddAsync(session);
+            await _dbContext.SaveChangesAsync();
+
+            return Result.Ok();
         }
 
         public Task<ResultWithData<User>> ReadByRefreshToken(string refreshToken)

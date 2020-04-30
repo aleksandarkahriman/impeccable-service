@@ -1,3 +1,5 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -33,11 +35,11 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 var client = _factory.CreateClient();
 
                 var emailRegistration = new EmailRegistrationDto("user@domain.com", "password");
-                var body = JsonConvert.SerializeObject(emailRegistration);
-                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                var requestBody = JsonConvert.SerializeObject(emailRegistration);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
                 // Act
-                var response = await client.PostAsync("/api/authentication/register", content);
+                var response = await client.PostAsync("/api/authentication/register", requestContent);
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -64,15 +66,37 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = _factory.CreateClient();
 
-                var emailLogin = new EmailLoginDto("user@domain.com", "password");
-                var body = JsonConvert.SerializeObject(emailLogin);
-                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                var emailLogin = new EmailLoginDto("frank@gmail.com", "12345678");
+                var requestBody = JsonConvert.SerializeObject(emailLogin);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
                 // Act
-                var response = await client.PostAsync("/api/authentication/login", content);
+                var response = await client.PostAsync("/api/authentication/login", requestContent);
 
                 // Assert
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+
+            [Fact]
+            public async Task ReturnsValidJwtAccessToken()
+            {
+                // Arrange
+                var client = _factory.CreateClient();
+
+                var emailLogin = new EmailLoginDto("frank@gmail.com", "12345678");
+                var requestBody = JsonConvert.SerializeObject(emailLogin);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+                // Act
+                var response = await client.PostAsync("/api/authentication/login", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var authenticationCredentials =
+                    JsonConvert.DeserializeObject<AuthenticationCredentialsDto>(responseBody);
+
+                // Assert
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(authenticationCredentials.AccessToken);
+                Assert.True(DateTime.UtcNow < token.ValidTo);
             }
         }
     }
