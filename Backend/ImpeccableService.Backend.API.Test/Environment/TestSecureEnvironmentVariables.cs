@@ -9,6 +9,8 @@ namespace ImpeccableService.Backend.API.Test.Environment
 
         public Task<string> SecurityCredentialsSecret() => Task.FromResult("SuperSecureWellGuardedSecret");
 
+        public string SecurityCredentialsIssuer() => "ImpeccableService";
+
         public string DatabaseConnectionString() => "Server=localhost;Database=impeccable_service_test;User=root;Password=root;";
     }
 }

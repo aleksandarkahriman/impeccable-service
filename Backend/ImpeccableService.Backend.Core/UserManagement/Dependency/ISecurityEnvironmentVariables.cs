@@ -8,6 +8,8 @@ namespace ImpeccableService.Backend.Core.UserManagement.Dependency
 
         Task<string> SecurityCredentialsSecret();
 
+        string SecurityCredentialsIssuer();
+
         string DatabaseConnectionString();
     }
 }
