@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.UserManagement.Dto;
 using Newtonsoft.Json;
 using Utility.Test;
@@ -132,10 +133,9 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
             public async Task LetsTheRequestPassIfValidAccessTokenIsProvided()
             {
                 // Arrange
-                var client = _factory.CreateClient();
-                var credentials = await Authenticate(client);
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", credentials.AccessToken);
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestUser());
 
                 // Act
                 var response = await client.GetAsync("/api/user/me");
@@ -158,20 +158,6 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-            }
-
-            private static async Task<AuthenticationCredentialsDto> Authenticate(HttpClient client)
-            {
-                var emailLogin = new EmailLoginDto("frank@gmail.com", "12345678");
-                var requestBody = JsonConvert.SerializeObject(emailLogin);
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync("/api/authentication/login", requestContent);
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var authenticationCredentials =
-                    JsonConvert.DeserializeObject<AuthenticationCredentialsDto>(responseBody);
-
-                return authenticationCredentials;
             }
         }
     }

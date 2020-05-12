@@ -60,5 +60,15 @@ namespace ImpeccableService.Backend.Database.UserManagement
         {
             throw new System.NotImplementedException();
         }
+
+        public async Task<ResultWithData<User>> Read(int id)
+        {
+            var userEntity = await _dbContext.Users
+                .FirstOrDefaultAsync(user => user.Id == id);
+
+            return userEntity != null
+                ? new ResultWithData<User>(_mapper.Map<User>(userEntity))
+                : new ResultWithData<User>(new KeyNotFoundException("User not found."));
+        }
     }
 }

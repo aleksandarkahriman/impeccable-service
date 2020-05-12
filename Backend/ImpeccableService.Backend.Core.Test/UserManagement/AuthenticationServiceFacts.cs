@@ -50,7 +50,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ReturnsErrorIfEmailIsAlreadyRegistered()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContext<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
+                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
                 _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(true));
 
@@ -65,7 +65,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromUserRepositoryEmailCheck()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContext<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
+                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
                 var expectedError = new Exception("Email check failed.");
                 _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(expectedError));
@@ -81,7 +81,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task CreatesAndSavesNewUser()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContext<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
+                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
                 _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
@@ -99,7 +99,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromUserRepositorySave()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContext<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
+                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
                 _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
@@ -153,7 +153,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task FindsUserMatchingEmailAndPasswordHash()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -180,7 +180,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromUserRepositoryRead()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -202,7 +202,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ReturnsValidAccessTokenIfEverythingGoesOk()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -236,7 +236,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ReturnsRefreshAndLogoutTokensAlongWithAccessToken()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -262,7 +262,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task SavesAuthentication()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -287,7 +287,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromAuthenticationSave()
             {
                 // Arrange
-                var emailLoginRequest = new RequestContext<EmailLogin>(new EmailLogin("user@domain.com", "password"));
+                var emailLoginRequest = new RequestContextWithModel<EmailLogin>(new EmailLogin("user@domain.com", "password"));
 
                 _securityEnvironmentVariablesMock.Setup(mock => mock.PasswordHashSalt())
                     .Returns(PasswordSalt);
@@ -367,7 +367,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ReturnsErrorIfTheRefreshTokenDoesNotExist()
             {
                 // Arrange
-                var refreshTokenRequest = new RequestContext<RefreshToken>(new RefreshToken(InvalidRefreshToken));
+                var refreshTokenRequest = new RequestContextWithModel<RefreshToken>(new RefreshToken(InvalidRefreshToken));
                 var expectedError = new Exception("User with token not found.");
                 _userRepositoryMock.Setup(mock => mock.ReadByRefreshToken(InvalidRefreshToken))
                     .ReturnsAsync(new ResultWithData<User>(expectedError));
@@ -386,7 +386,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task GeneratesNewNonEmptyRefreshToken()
             {
                 // Arrange
-                var refreshTokenRequest = new RequestContext<RefreshToken>(new RefreshToken(ValidRefreshToken));
+                var refreshTokenRequest = new RequestContextWithModel<RefreshToken>(new RefreshToken(ValidRefreshToken));
                 
                 _userRepositoryMock.Setup(mock => mock.ReadByRefreshToken(ValidRefreshToken))
                     .ReturnsAsync(new ResultWithData<User>(ValidUser));
@@ -409,7 +409,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromAuthenticationSave()
             {
                 // Arrange
-                var refreshTokenRequest = new RequestContext<RefreshToken>(new RefreshToken(ValidRefreshToken));
+                var refreshTokenRequest = new RequestContextWithModel<RefreshToken>(new RefreshToken(ValidRefreshToken));
 
                 _userRepositoryMock.Setup(mock => mock.ReadByRefreshToken(ValidRefreshToken))
                     .ReturnsAsync(new ResultWithData<User>(ValidUser));

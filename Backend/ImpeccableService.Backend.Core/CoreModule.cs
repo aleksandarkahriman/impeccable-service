@@ -14,6 +14,9 @@ namespace ImpeccableService.Backend.Core
             services.AddScoped<IAuthenticationService>(provider => provider.GetService<AuthenticationService>());
             services.AddScoped<IdentitySecurityFactory>();
 
+            services.AddScoped<UserService>();
+            services.AddScoped<IUserService>(provider => provider.GetService<UserService>());
+
             return services;
         }
     }

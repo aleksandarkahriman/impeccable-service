@@ -25,7 +25,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             _logger = logger;
         }
 
-        public async Task<Result> RegisterWithEmail(RequestContext<EmailRegistration> emailRegistrationRequest)
+        public async Task<Result> RegisterWithEmail(RequestContextWithModel<EmailRegistration> emailRegistrationRequest)
         {
             var emailRegistration = emailRegistrationRequest.Model;
 
@@ -55,7 +55,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             return Result.Ok();
         }
 
-        public async Task<ResultWithData<SecurityCredentials>> LoginWithEmail(RequestContext<EmailLogin> emailLoginRequest)
+        public async Task<ResultWithData<SecurityCredentials>> LoginWithEmail(RequestContextWithModel<EmailLogin> emailLoginRequest)
         {
             var emailLogin = emailLoginRequest.Model;
 
@@ -75,7 +75,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
 
         
 
-        public async Task<ResultWithData<SecurityCredentials>> RefreshToken(RequestContext<RefreshToken> refreshTokenRequest)
+        public async Task<ResultWithData<SecurityCredentials>> RefreshToken(RequestContextWithModel<RefreshToken> refreshTokenRequest)
         {
             var refreshToken = refreshTokenRequest.Model;
 

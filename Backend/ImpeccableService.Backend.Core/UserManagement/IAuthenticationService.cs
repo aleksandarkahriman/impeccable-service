@@ -8,10 +8,10 @@ namespace ImpeccableService.Backend.Core.UserManagement
 {
     public interface IAuthenticationService
     {
-        Task<Result> RegisterWithEmail(RequestContext<EmailRegistration> emailRegistrationRequest);
+        Task<Result> RegisterWithEmail(RequestContextWithModel<EmailRegistration> emailRegistrationRequest);
 
-        Task<ResultWithData<SecurityCredentials>> LoginWithEmail(RequestContext<EmailLogin> emailLoginRequest);
+        Task<ResultWithData<SecurityCredentials>> LoginWithEmail(RequestContextWithModel<EmailLogin> emailLoginRequest);
 
-        Task<ResultWithData<SecurityCredentials>> RefreshToken(RequestContext<RefreshToken> refreshTokenRequest);
+        Task<ResultWithData<SecurityCredentials>> RefreshToken(RequestContextWithModel<RefreshToken> refreshTokenRequest);
     }
 }

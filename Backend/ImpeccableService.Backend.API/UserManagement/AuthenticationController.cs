@@ -33,7 +33,7 @@ namespace ImpeccableService.Backend.API.UserManagement
             _logger.Info("User registration in progress.");
 
             var emailRegistration = _mapper.Map<EmailRegistration>(emailRegistrationDto);
-            var registrationResult = await _authenticationService.RegisterWithEmail(new RequestContext<EmailRegistration>(emailRegistration));
+            var registrationResult = await _authenticationService.RegisterWithEmail(new RequestContextWithModel<EmailRegistration>(emailRegistration));
 
             return registrationResult.Success
                 ? Created(string.Empty, null)
@@ -46,7 +46,7 @@ namespace ImpeccableService.Backend.API.UserManagement
             _logger.Info($"Email login in progress for {emailLoginDto.Email}.");
 
             var emailLogin = _mapper.Map<EmailLogin>(emailLoginDto);
-            var loginResult = await _authenticationService.LoginWithEmail(new RequestContext<EmailLogin>(emailLogin));
+            var loginResult = await _authenticationService.LoginWithEmail(new RequestContextWithModel<EmailLogin>(emailLogin));
 
             var authenticationCredentials = _mapper.Map<AuthenticationCredentialsDto>(loginResult.Data);
 

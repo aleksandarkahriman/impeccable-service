@@ -17,13 +17,12 @@ namespace ImpeccableService.Backend.API.Test.Environment
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
-            const string passwordHash = "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg="; // 12345678 
-
+            var validTestUser = TestUserRegistry.ValidTestUser();
             _context.Users.Add(new UserEntity
             {
-                Id = 1,
-                Email = "frank@gmail.com",
-                PasswordHash = passwordHash
+                Id = validTestUser.Id,
+                Email = validTestUser.Email,
+                PasswordHash = validTestUser.PasswordHash
             });
 
             _context.SaveChanges();

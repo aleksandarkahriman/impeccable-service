@@ -1,12 +1,12 @@
 ﻿namespace ImpeccableService.Backend.Core.Context
 {
-    public class RequestContext<T>
+    public class RequestContext
     {
-        public RequestContext(T model)
+        public RequestContext(Identity identity)
         {
-            Model = model;
+            Identity = identity;
         }
 
-        public T Model { get; }
+        public Identity Identity { get; }
     }
 }
