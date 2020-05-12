@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.API.UserManagement.Dto;
 using ImpeccableService.Backend.Core.Context;

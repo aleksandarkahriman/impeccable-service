@@ -1,14 +1,13 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using ImpeccableService.Backend.API.UserManagement.Dto;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Domain.UserManagement;
 
-namespace ImpeccableService.Backend.API
+namespace ImpeccableService.Backend.API.UserManagement.Dto
 {
-    public class ApiAutoMapperProfile : Profile
+    internal class UserManagementAutoMapperProfile : Profile
     {
-        public ApiAutoMapperProfile()
+        public UserManagementAutoMapperProfile()
         {
             CreateMap<EmailRegistrationDto, EmailRegistration>();
             CreateMap<EmailLoginDto, EmailLogin>();
