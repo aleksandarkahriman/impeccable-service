@@ -61,6 +61,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
 
             var passwordHash = _identitySecurityFactory.HashPassword(emailLogin.Password);
 
+            
             var userResult = await _userRepository.Read(emailLogin.Email, passwordHash);
             if (userResult.Failure)
             {

@@ -39,7 +39,25 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                     JsonConvert.DeserializeObject<GetUserProfileDto>(responseBody);
 
                 // Assert
-                Assert.Equal("frank@gmail.com", getUserProfileDto.Email);
+                Assert.Equal(TestUserRegistry.ValidTestUser().Email, getUserProfileDto.Email);
+            }
+
+            [Fact]
+            public async Task ReturnsCorrectRole()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestUser());
+
+                // Act
+                var response = await client.GetAsync("/api/user/me");
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getUserProfileDto =
+                    JsonConvert.DeserializeObject<GetUserProfileDto>(responseBody);
+
+                // Assert
+                Assert.Equal(TestUserRegistry.ValidTestUser().Role, getUserProfileDto.Role);
             }
         }
     }
