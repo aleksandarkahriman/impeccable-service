@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: Backend/ImpeccableService.Backend.API/build_output
+  - source: build_output
     destination: /home/ubuntu/aspnetlexchatbot
   - source: scripts/virtualhost.conf
     destination: /home/ubuntu/aspnetlexchatbot
