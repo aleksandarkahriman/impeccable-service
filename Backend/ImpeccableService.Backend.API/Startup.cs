@@ -50,12 +50,12 @@ namespace ImpeccableService.Backend.API
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityEnvironmentVariables.SecurityCredentialsSecret().Result)),
-                    ValidateLifetime = true,
-                    ValidateIssuer = true,
-                    ValidIssuer = _securityEnvironmentVariables.SecurityCredentialsIssuer(),
-                    ValidateAudience = false
+                    // ValidateIssuerSigningKey = true,
+                    // IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_securityEnvironmentVariables.SecurityCredentialsSecret().Result)),
+                    // ValidateLifetime = true,
+                    // ValidateIssuer = true,
+                    // ValidIssuer = _securityEnvironmentVariables.SecurityCredentialsIssuer(),
+                    // ValidateAudience = false
                 };
             });
             services.AddRouting(options => options.LowercaseUrls = true);
