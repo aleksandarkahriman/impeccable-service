@@ -8,7 +8,7 @@ if [ ! -f /usr/bin/dotnet ]; then
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
     apt-get update
 
-    apt-get install dotnet-dev-1.0.4 -y
+    apt-get install dotnet-sdk-3.1 -y
 fi
 
 # first time running dotnet tool requires setting up package cache
