@@ -10,6 +10,6 @@ phases:
       - dotnet publish -c release -o ./build_output Backend/ImpeccableService.Backend.API/ImpeccableService.Backend.API.csproj
 artifacts:
   files:
-    - dotnetLexChatBot/build_output/**/*
+    - Backend/ImpeccableService.Backend.API/build_output/**/*
     - scripts/**/*
     - appspec.yml
