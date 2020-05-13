@@ -15,5 +15,5 @@ fi
 
 # un asp.core application
 cd $SERVICE_ROOT
-dotnet dotnetLexChatBot.dll &>$SERVICE_ROOT/service.log &
+dotnet ImpeccableService.Backend.API.dll &>$SERVICE_ROOT/service.log &
 echo $! > $SERVICE_ROOT/service.pid
