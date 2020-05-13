@@ -4,11 +4,11 @@ cd /home/ubuntu/
 # install dotnet core
 # https://www.microsoft.com/net/core#linuxubuntu
 if [ ! -f /usr/bin/dotnet ]; then
-    echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
-    apt-get update
-
-    apt-get install dotnet-sdk-3.1 -y
+    sudo add-apt-repository universe
+    sudo apt-get update
+    sudo apt-get install apt-transport-https
+    sudo apt-get update
+    sudo apt-get install dotnet-sdk-3.1
 fi
 
 # first time running dotnet tool requires setting up package cache
