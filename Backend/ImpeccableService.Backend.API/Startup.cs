@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using AutoMapper;
+using ImpeccableService.Backend.API.Utility.Dto;
 using ImpeccableService.Backend.Core;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Database;
+using ImpeccableService.Backend.FileStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,13 +35,18 @@ namespace ImpeccableService.Backend.API
             services.AddLogging();
             services.AddCore();
             services.AddDatabase();
+            services.AddFileStorage(Configuration);
             services.AddApi();
             services.AddControllers(options => options.Filters.Add(new UnhandledExceptionFilter()));
-            services.AddAutoMapper(new List<Assembly>
+            services.AddAutoMapper((provider, configuration) =>
+            {
+                configuration.AddProfile(new UtilityAutoMapperProfile(provider.GetRequiredService<IFileStorage>()));
+            }, new List<Assembly>
             {
                 typeof(ApiModule).Assembly,
                 typeof(DatabaseModule).Assembly
             });
+            
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

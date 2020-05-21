@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\Utility\Utility.Application\Utility.Application.csproj" />
     <ProjectReference Include="..\ImpeccableService.Backend.Core\ImpeccableService.Backend.Core.csproj" />
     <ProjectReference Include="..\ImpeccableService.Backend.Database\ImpeccableService.Backend.Database.csproj" />
+    <ProjectReference Include="..\ImpeccableService.Backend.FileStorage\ImpeccableService.Backend.FileStorage.csproj" />
   </ItemGroup>
 
 

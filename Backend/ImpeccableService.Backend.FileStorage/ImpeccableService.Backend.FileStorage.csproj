@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.3.106.25" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.110.71" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImpeccableService.Backend.Core\ImpeccableService.Backend.Core.csproj" />
+  </ItemGroup>
+
+</Project>

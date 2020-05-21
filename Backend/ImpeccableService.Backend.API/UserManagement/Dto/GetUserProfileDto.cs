@@ -1,4 +1,6 @@
-﻿namespace ImpeccableService.Backend.API.UserManagement.Dto
+﻿using ImpeccableService.Backend.API.Utility.Dto;
+
+namespace ImpeccableService.Backend.API.UserManagement.Dto
 {
     public class GetUserProfileDto
     {
@@ -7,5 +9,7 @@
         public string Email { get; set; }
 
         public string Role { get; set; }
+
+        public ImageDto ProfileImage { get; set; }
     }
 }

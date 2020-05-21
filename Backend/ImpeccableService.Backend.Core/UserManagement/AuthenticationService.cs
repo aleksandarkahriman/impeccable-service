@@ -43,7 +43,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
                 return new Result(new RegisterWithEmailException(RegisterWithEmailException.ErrorCause.EmailExists));
             }
 
-            var user = new User(emailRegistration.Email, _identitySecurityFactory.HashPassword(emailRegistration.Password));
+            var user = new User(emailRegistration.Email, _identitySecurityFactory.HashPassword(emailRegistration.Password), new DefaultUserProfileImage());
 
             var createResult = await _userRepository.Create(user);
             if (createResult.Failure)
