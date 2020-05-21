@@ -27,11 +27,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpeccableService.Backend.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpeccableService.Backend.API.Test", "Backend\ImpeccableService.Backend.API.Test\ImpeccableService.Backend.API.Test.csproj", "{1EAF95D0-B949-4375-B81E-4DFF0CC9662A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpeccableService.Backend.Database", "Backend\ImpeccableService.Backend.Database\ImpeccableService.Backend.Database.csproj", "{9D3734E7-24DC-49FD-9260-FA8C5AAB3BFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpeccableService.Backend.Database", "Backend\ImpeccableService.Backend.Database\ImpeccableService.Backend.Database.csproj", "{9D3734E7-24DC-49FD-9260-FA8C5AAB3BFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpeccableService.Backend.Domain", "Backend\ImpeccableService.Backend.Domain\ImpeccableService.Backend.Domain.csproj", "{768BF817-232A-405C-866D-C6DA64DFF0A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpeccableService.Backend.Domain", "Backend\ImpeccableService.Backend.Domain\ImpeccableService.Backend.Domain.csproj", "{768BF817-232A-405C-866D-C6DA64DFF0A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpeccableService.Client.Domain", "Client\ImpeccableService.Client.Domain\ImpeccableService.Client.Domain.csproj", "{DF30C790-6694-4050-BA36-7BB36D82A57F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImpeccableService.Client.Domain", "Client\ImpeccableService.Client.Domain\ImpeccableService.Client.Domain.csproj", "{DF30C790-6694-4050-BA36-7BB36D82A57F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImpeccableService.Backend.FileStorage", "Backend\ImpeccableService.Backend.FileStorage\ImpeccableService.Backend.FileStorage.csproj", "{24DCDBF2-57D6-497B-862D-C5B06710562F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{DF30C790-6694-4050-BA36-7BB36D82A57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF30C790-6694-4050-BA36-7BB36D82A57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF30C790-6694-4050-BA36-7BB36D82A57F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24DCDBF2-57D6-497B-862D-C5B06710562F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24DCDBF2-57D6-497B-862D-C5B06710562F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24DCDBF2-57D6-497B-862D-C5B06710562F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24DCDBF2-57D6-497B-862D-C5B06710562F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{9D3734E7-24DC-49FD-9260-FA8C5AAB3BFB} = {18E67E1A-79F8-4B28-86CD-BEA1AE5950B3}
 		{768BF817-232A-405C-866D-C6DA64DFF0A1} = {18E67E1A-79F8-4B28-86CD-BEA1AE5950B3}
 		{DF30C790-6694-4050-BA36-7BB36D82A57F} = {5EFF9CE9-65D2-4EB8-AD67-D65078D28965}
+		{24DCDBF2-57D6-497B-862D-C5B06710562F} = {18E67E1A-79F8-4B28-86CD-BEA1AE5950B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97803BAB-1374-40C9-BB6E-830F459FA0BA}
