@@ -4,7 +4,7 @@ cd /home/ubuntu/
 # start apache
 systemctl restart apache2.service
 
-SERVICE_ROOT=/home/ubuntu/aspnetlexchatbot
+SERVICE_ROOT=/home/ubuntu/app
 PID_FILE=$SERVICE_ROOT/service.pid
 
 # shut down sevice if it is running already
@@ -15,6 +15,6 @@ fi
 
 # un asp.core application
 cd $SERVICE_ROOT
-dotnet-ef database update
+dotnet ef database update
 dotnet ImpeccableService.Backend.API.dll &>$SERVICE_ROOT/service.log &
 echo $! > $SERVICE_ROOT/service.pid

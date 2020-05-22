@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: build_output
-    destination: /home/ubuntu/aspnetlexchatbot
+    destination: /home/ubuntu/app
   - source: scripts/virtualhost.conf
-    destination: /home/ubuntu/aspnetlexchatbot
+    destination: /home/ubuntu/app
 hooks:
   ApplicationStop:
     - location: scripts/stop_service
