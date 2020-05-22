@@ -8,6 +8,7 @@ phases:
     commands:
       - echo Build started on `date`
       - dotnet publish -c release -o ./build_output Backend/ImpeccableService.Backend.API/ImpeccableService.Backend.API.csproj
+      - dotnet ef database update --project Backend/ImpeccableService.Backend.API
 artifacts:
   files:
     - build_output/**/*
