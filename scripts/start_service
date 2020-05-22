@@ -15,6 +15,5 @@ fi
 
 # un asp.core application
 cd $SERVICE_ROOT
-dotnet ef database update
 dotnet ImpeccableService.Backend.API.dll &>$SERVICE_ROOT/service.log &
 echo $! > $SERVICE_ROOT/service.pid
