@@ -8,7 +8,7 @@ namespace ImpeccableService.Backend.FileStorage
 {
     internal class FileStorage : IFileStorage
     {
-        private const string BucketName = "aws-test-is-eu-west-1-773924021256-test-is-file-storage";
+        private const string BucketName = "aws-infra-dev-eu-west-1-837187757324-infra-dev-file-storage";
 
         private readonly IAmazonS3 _s3Client;
 
