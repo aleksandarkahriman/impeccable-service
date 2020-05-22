@@ -9,6 +9,7 @@ phases:
       - echo Build started on `date`
       - dotnet publish -c release -o ./build_output Backend/ImpeccableService.Backend.API/ImpeccableService.Backend.API.csproj
       - dotnet tool install --global dotnet-ef
+      - export ASPNETCORE_ENVIRONMENT=Production
       - dotnet ef database update --project Backend/ImpeccableService.Backend.API
 artifacts:
   files:
