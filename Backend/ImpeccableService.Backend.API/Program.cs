@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +27,10 @@ namespace ImpeccableService.Backend.API
                 {
                     if (!hostingContext.HostingEnvironment.IsDevelopment())
                     {
-                        config.AddSecretsManager();
+                        config.AddSecretsManager(configurator: options =>
+                        {
+                            options.KeyGenerator = (entry, key) => key.Split("---").Last();
+                        });
                     }
                 });
     }
