@@ -29,7 +29,7 @@ namespace ImpeccableService.Backend.API
                     {
                         config.AddSecretsManager(configurator: options =>
                         {
-                            options.SecretFilter = entry => entry.Name.Contains(hostingContext.Configuration.GetSection("ProjectId").Value);
+                            options.SecretFilter = entry => entry.Name.Contains(config.Build().GetSection("ProjectId").Value);
                             options.KeyGenerator = (entry, key) => key.Split("---").Last();
                         });
                     }
