@@ -3,18 +3,20 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Domain.Utility;
+using Microsoft.Extensions.Configuration;
 
 namespace ImpeccableService.Backend.FileStorage
 {
     internal class FileStorage : IFileStorage
     {
-        private const string BucketName = "aws-test-is-eu-west-1-773924021256-test-is-file-storage";
-
         private readonly IAmazonS3 _s3Client;
 
-        public FileStorage(IAmazonS3 s3Client)
+        private readonly string _bucketName;
+
+        public FileStorage(IAmazonS3 s3Client, IConfiguration configuration)
         {
             _s3Client = s3Client;
+            _bucketName = configuration.GetSection("S3FileStorageUrl").Value;
         }
 
         public string Sign<T>(T file) where T : File
@@ -23,7 +25,7 @@ namespace ImpeccableService.Backend.FileStorage
             {
                 var signedUrlRequest = new GetPreSignedUrlRequest
                 {
-                    BucketName = BucketName,
+                    BucketName = _bucketName,
                     Key = file.Path,
                     Expires = DateTime.Now.AddMinutes(1),
                     Verb = HttpVerb.GET
