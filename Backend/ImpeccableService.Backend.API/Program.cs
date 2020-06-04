@@ -26,7 +26,10 @@ namespace ImpeccableService.Backend.API
                 {
                     if (!hostingContext.HostingEnvironment.IsDevelopment())
                     {
-                        config.AddSecretsManager();
+                        config.AddSecretsManager(configurator: options =>
+                        {
+                            options.SecretFilter = entry => entry.Name.StartsWith(config.Build().GetSection("ProjectId").Value);
+                        });
                     }
                 });
     }
