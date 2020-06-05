@@ -13,7 +13,7 @@ phases:
       - export ASPNETCORE_ENVIRONMENT=Production
       - export ProjectId=$PROJECT_ID
       - echo $ProjectId
-      - #dotnet ef database update --project Backend/ImpeccableService.Backend.API
+      - dotnet ef database update --project Backend/ImpeccableService.Backend.API
 artifacts:
   files:
     - build_output/**/*
