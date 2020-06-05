@@ -30,7 +30,7 @@ namespace ImpeccableService.Backend.API
                         var projectId = config.Build().GetSection("ProjectId").Value;
                         config.AddSecretsManager(configurator: options =>
                         {
-                            options.SecretFilter = entry => entry.Name.Contains(projectId);
+                            options.SecretFilter = entry => entry.Name.Contains(config.Build().GetSection("ProjectId").Value);
                             options.KeyGenerator = (entry, key) => key.Split("---").Last();
                         });
                     }
