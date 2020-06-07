@@ -16,6 +16,7 @@ PID_FILE=$SERVICE_ROOT/service.pid
 # un asp.core application
 cd $SERVICE_ROOT
 chmod +x env.sh
-./env.sh
+bash env.sh
+echo $ProjectId
 dotnet ImpeccableService.Backend.API.dll &>$SERVICE_ROOT/service.log &
 echo $! > $SERVICE_ROOT/service.pid
