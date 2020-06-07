@@ -16,7 +16,7 @@ namespace ImpeccableService.Backend.FileStorage
         public FileStorage(IAmazonS3 s3Client, IConfiguration configuration)
         {
             _s3Client = s3Client;
-            _bucketName = configuration.GetSection("S3FileStorageUrl").Value;
+            _bucketName = configuration.GetSection("S3FileStorageBucketName").Value;
         }
 
         public string Sign<T>(T file) where T : File
