@@ -14,7 +14,7 @@ phases:
       - echo export ASPNETCORE_ENVIRONMENT=Production >> build_output/env.sh
       - chmod +x build_output/env.sh
       - echo "$(cat build_output/env.sh)"
-      - ./build_output/env.sh
+      - bash build_output/env.sh
       - echo $ProjectId
       - dotnet ef database update --project Backend/ImpeccableService.Backend.API
       
