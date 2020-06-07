@@ -9,10 +9,13 @@ phases:
     commands:
       - echo Build started on `date`
       - dotnet publish -c release -o ./build_output Backend/ImpeccableService.Backend.API/ImpeccableService.Backend.API.csproj
-      - export ASPNETCORE_ENVIRONMENT=Production
-      - export ProjectId=$PROJECT_ID
+      - touch build_output/env.sh
+      - echo export ProjectId=$ProjectId >> build_output/env.sh
+      - echo export ASPNETCORE_ENVIRONMENT=Production >> build_output/env.sh
+      - ./build_output/env.sh
       - echo $ProjectId
       - dotnet ef database update --project Backend/ImpeccableService.Backend.API
+      
 artifacts:
   files:
     - build_output/**/*
