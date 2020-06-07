@@ -10,6 +10,7 @@ phases:
       - echo Build started on `date`
       - dotnet publish -c release -o ./build_output Backend/ImpeccableService.Backend.API/ImpeccableService.Backend.API.csproj
       - touch build_output/env.sh
+      - echo '#!/bin/bash' >> build_output/env.sh
       - echo export ProjectId=$PROJECT_ID >> build_output/env.sh
       - echo export ASPNETCORE_ENVIRONMENT=Production >> build_output/env.sh
       - export ProjectId=$PROJECT_ID
