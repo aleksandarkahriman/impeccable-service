@@ -12,7 +12,7 @@ phases:
       - touch build_output/env.sh
       - echo export ProjectId=$ProjectId >> build_output/env.sh
       - echo export ASPNETCORE_ENVIRONMENT=Production >> build_output/env.sh
-      - chmod +x /build_output/env.sh
+      - chmod +x build_output/env.sh
       - ./build_output/env.sh
       - echo $ProjectId
       - dotnet ef database update --project Backend/ImpeccableService.Backend.API
