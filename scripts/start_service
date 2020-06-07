@@ -13,6 +13,8 @@ PID_FILE=$SERVICE_ROOT/service.pid
 #     rm $PID_FILE
 # fi
 
+sudo su
+
 # un asp.core application
 cd $SERVICE_ROOT
 echo $ProjectId
