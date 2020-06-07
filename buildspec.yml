@@ -15,8 +15,8 @@ phases:
       - echo export S3FileStorageBucketName=$S3_FILE_STORAGE_BUCKET_NAME >> build_output/env.sh
       - echo export ProjectId=$PROJECT_ID >> build_output/env.sh
       - echo export ASPNETCORE_ENVIRONMENT=Production >> build_output/env.sh
-      - chmod +x build_output/env.sh
-      - ./build_output/env.sh
+      - export ProjectId=$PROJECT_ID
+      - export ASPNETCORE_ENVIRONMENT=Production
       - dotnet ef database update --project Backend/ImpeccableService.Backend.API
       
 artifacts:
