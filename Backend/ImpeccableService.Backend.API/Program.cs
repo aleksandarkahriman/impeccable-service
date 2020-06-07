@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +28,9 @@ namespace ImpeccableService.Backend.API
                 {
                     if (!hostingContext.HostingEnvironment.IsDevelopment())
                     {
-                        var projectId = config.Build().GetSection("ProjectId").Value;
                         config.AddSecretsManager(configurator: options =>
                         {
-                            options.SecretFilter = entry => entry.Name.StartsWith(projectId);
+                            options.SecretFilter = entry => entry.Name.StartsWith(Environment.GetEnvironmentVariable("ProjectId"));
                             options.KeyGenerator = (entry, key) => key.Split("---").Last();
                         });
                     }
