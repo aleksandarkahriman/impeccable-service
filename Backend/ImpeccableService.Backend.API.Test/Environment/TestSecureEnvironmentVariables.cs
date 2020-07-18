@@ -11,6 +11,6 @@ namespace ImpeccableService.Backend.API.Test.Environment
 
         public string SecurityCredentialsIssuer() => "ImpeccableService";
 
-        public string DatabaseConnectionString() => "Server=localhost;Database=impeccable_service_test;User=root;Password=root;";
+        public string DatabaseConnectionString() => "Server=localhost;Database=impeccable_service_test;User=root;Password=rootroot;";
     }
 }
