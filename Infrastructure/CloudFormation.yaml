@@ -1,0 +1,376 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Conditions:
+  CreateCodeBuildResources: !Equals [true, true]
+  CreateWebSiteS3Bucket: !Equals [true, false]
+  UseSubnet: !Not [!Equals [!Ref 'SubnetId', subnet-none]]
+
+Description: An ASP.NET Core application.
+
+Mappings:
+  RegionMap: 
+    us-west-2:
+      "value" : "ami-835b4efa"
+    us-east-1:
+      "value" : "ami-d15a75c7"
+    eu-west-1:
+      "value" : "ami-6d48500b"
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups: [
+      {Label: {default: Application}, Parameters: [ProjectId, AppName]}, 
+      {Label: {default: GitHub}, Parameters: [GitHubOwner, GitHubOAuthToken, GitHubRepo, GitHubRepoSourceBranch]},
+      {Label: {default: Database}, Parameters: [DatabaseMasterPassword]}
+    ]
+  CodeBuildImage: aws/codebuild/standard:4.0
+  CreateCodeBuild: true
+  ProjectTemplateId: webapp-netcore-ec2
+  WebsiteS3Bucket: AWS::NoValue
+
+Outputs:
+  URL:
+    Description: The URL for the ASP.NET Core web application deployed on an Amazon EC2 instance.
+    Value: !Join ['', ['http://', !GetAtt [WebApp, PublicDnsName], /]]
+Parameters:
+  GitHubOwner:
+    Description: 'The owner of the GitHub repository.'
+    Type: String
+    Default: "aleksandarkahriman"
+  GitHubOAuthToken:
+    Description: 'The OAuthToken of the GitHub user.'
+    Type: String
+    Default: "6f129dff6c74c27218c9d72fada305a34dae7499"
+  GitHubRepo:
+    Description: 'The GitHub repository.'
+    Type: String
+  GitHubRepoSourceBranch:
+    Description: 'The GitHub repository source branch.'
+    Type: String
+  AppName:
+    Description: Name of the application.
+    MaxLength: 100
+    MinLength: 1
+    Type: String
+  InstanceType:
+    Description: The Amazon EC2 instance type to use.
+    Type: String
+    Default: t2.micro
+  KeyPairName:
+    Description: The name of the key pair used to make SSH connections to Amazon EC2 instances.
+    Type: AWS::EC2::KeyPair::KeyName
+  ProjectId:
+    AllowedPattern: ^[a-z]([a-z0-9-])+$
+    ConstraintDescription: Project IDs must be between 2 and 15 characters, begin with a letter, and only contain lowercase letters, numbers, and hyphens (-).
+    Description: Project ID.
+    MaxLength: 15
+    MinLength: 2
+    Type: String
+  SubnetId:
+    Description: The name of the VPC public subnet to use for Amazon EC2 instances launched for this project.
+    Type: AWS::EC2::Subnet::Id
+  VpcId:
+    Description: The ID of the Amazon Virtual Private Cloud (VPC) to use for Amazon EC2 instances.
+    Type: AWS::EC2::VPC::Id
+  DatabaseMasterPassword:
+    Description: The master password assigned to root user 'admin'.
+    Type: String
+    NoEcho: true
+
+Resources:
+  # CodePipeline
+  CodeBuildPolicy:
+    Condition: CreateCodeBuildResources
+    DependsOn: [CodeBuildRole]
+    Description: Setting IAM policy for service role for Amazon EC2 instances
+    Properties:
+      PolicyDocument:
+        Statement: [
+          {Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'], Effect: Allow, Resource: '*'},
+          {Action: ['s3:PutObject', 's3:GetObject', 's3:GetObjectVersion'], Effect: Allow, Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket']], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]]},
+          !If [CreateWebSiteS3Bucket, {Action: ['s3:PutObject*', 's3:GetObject', 's3:GetObjectVersion'], Effect: Allow, Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'AWS::NoValue']], !Join ['', ['arn:aws:s3:::', !Ref 'AWS::NoValue', /*]]]}, !Ref 'AWS::NoValue'],
+          {Action: ['kms:GenerateDataKey*', 'kms:Encrypt', 'kms:Decrypt'], Effect: Allow, Resource: [!Join [':', ['arn:aws:kms', !Ref 'AWS::Region', !Ref 'AWS::AccountId', !Join [/, [alias, aws/s3]]]]]},
+          {Action: ['secretsmanager:ListSecrets'], Effect: Allow, Resource: '*'},
+          {Action: ['secretsmanager:GetSecretValue'], Effect: Allow, Resource: '*'},
+          {Action: ['kms:List*', 'kms:Get*', 'kms:Decrypt'], Effect: Allow, Resource: '*'}
+        ]
+      PolicyName: CodeStarWorkerCodeBuildPolicy
+      Roles: [!Ref 'CodeBuildRole']
+    Type: AWS::IAM::Policy
+  CodeBuildProject:
+    Condition: CreateCodeBuildResources
+    DependsOn: [CodeBuildPolicy]
+    Properties:
+      Artifacts:
+        Packaging: zip
+        Type: codepipeline
+      Description: !Join ['', ['CodeBuild Project for ', !Ref 'AppName']]
+      Environment:
+        ComputeType: small
+        EnvironmentVariables: [
+          {Name: S3_BUCKET, Value: !Ref 'S3Bucket'},
+          {Name: WEBSITE_S3_PREFIX, Value: !If [CreateWebSiteS3Bucket, !Join ['', ['https://s3-us-west-2.amazonaws.com/', !Ref 'AWS::NoValue']], NoVal]},
+          {Name: WEBSITE_S3_BUCKET, Value: !If [CreateWebSiteS3Bucket, !Ref 'AWS::NoValue', NoVal]},
+          {Name: PROJECT_ID, Value: !Ref 'ProjectId'},
+          {Name: S3_FILE_STORAGE_BUCKET_NAME, Value: !Ref 'S3FileStorage'}
+        ]
+        Image: aws/codebuild/standard:4.0
+        Type: container
+      Name: !Ref 'ProjectId'
+      ServiceRole: !Ref 'CodeBuildRole'
+      Source:
+        Type: codepipeline
+    Type: AWS::CodeBuild::Project
+  CodeBuildRole:
+    Condition: CreateCodeBuildResources
+    Description: Creating service role in IAM for Amazon EC2 instances
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement: [{Action: 'sts:AssumeRole', Effect: Allow, Principal: {Service: codebuild.amazonaws.com}}]
+      Path: /
+      RoleName: !Join ['-', [CodeStarWorker, !Ref 'ProjectId', CodeBuild]]
+    Type: AWS::IAM::Role
+  CodeDeployApplication:
+    Description: Configuring AWS CodeDeploy for project application
+    Properties:
+      ApplicationName: !Ref 'ProjectId'
+    Type: AWS::CodeDeploy::Application
+  CodeDeployTrustRole:
+    Description: Creating service role in IAM for AWS CodeDeploy
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement: [{Action: 'sts:AssumeRole', Effect: Allow, Principal: {Service: [
+                codedeploy.amazonaws.com]}, Sid: ''}]
+      Path: /
+      Policies: [{PolicyDocument: {Statement: [{Action: ['ec2:DescribeInstances',
+                  'ec2:DescribeInstanceStatus'], Effect: Allow, Resource: ['*']}]},
+          PolicyName: CodeStarWorkerCodeDeployPolicy}]
+      RoleName: !Join ['-', [CodeStarWorker, !Ref 'ProjectId', CodeDeploy]]
+    Type: AWS::IAM::Role
+  CodePipelineTrustRole:
+    Description: Creating service role in IAM for AWS CodePipeline
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement: [{Action: 'sts:AssumeRole', Effect: Allow, Principal: {Service: [
+                codepipeline.amazonaws.com]}, Sid: 1}]
+      Path: /
+      Policies: [{PolicyDocument: {Statement: [
+        {Action: ['s3:GetObject', 's3:GetObjectVersion', 's3:GetBucketVersioning', 's3:PutObject'], Effect: Allow, Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket']], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]]},
+        {Action: ['codedeploy:CreateDeployment', 'codedeploy:GetApplicationRevision', 'codedeploy:GetDeployment', 'codedeploy:GetDeploymentConfig', 'codedeploy:RegisterApplicationRevision'], Effect: Allow,
+          Resource: [!Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', application, !Ref 'CodeDeployApplication']], !Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', deploymentgroup,
+          !Join [/, [!Ref 'CodeDeployApplication', !Ref 'DeploymentGroup']]]], !Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', deploymentconfig, '*']]]},
+        !If [CreateCodeBuildResources, { Action: ['codebuild:StartBuild', 'codebuild:BatchGetBuilds', 'codebuild:StopBuild'], Effect: Allow, Resource: [!GetAtt 'CodeBuildProject.Arn']}, !Ref 'AWS::NoValue']]},
+        PolicyName: CodeStarWorkerCodePipelinePolicy}]
+      RoleName: !Join ['-', [CodeStarWorker, !Ref 'ProjectId', CodePipeline]]
+    Type: AWS::IAM::Role
+  DeploymentGroup:
+    DependsOn: [CodeDeployTrustRole, WebApp]
+    Description: Creating AWS CodeDeploy deployment groups for project application
+    Properties:
+      ApplicationName: !Ref 'CodeDeployApplication'
+      DeploymentConfigName: CodeDeployDefault.OneAtATime
+      DeploymentGroupName: !Join ['', [!Ref 'ProjectId', -Env]]
+      Ec2TagFilters: [{Key: Environment, Type: KEY_AND_VALUE, Value: !Join ['', [
+              !Ref 'ProjectId', -WebApp]]}]
+      ServiceRoleArn: !GetAtt [CodeDeployTrustRole, Arn]
+    Type: AWS::CodeDeploy::DeploymentGroup
+  ProjectPipeline:
+    DependsOn: [CodeDeployApplication, CodePipelineTrustRole, S3Bucket]
+    Description: Creating a deployment pipeline for your project in AWS CodePipeline
+    Properties:
+      ArtifactStore:
+        Location: !Join ['-', [aws, !Ref 'ProjectId', !Ref 'AWS::Region', !Ref 'AWS::AccountId', pipe]]
+        Type: S3
+      Name: !Join ['-', [!Ref 'ProjectId', Pipeline]]
+      RoleArn: !GetAtt [CodePipelineTrustRole, Arn]
+      Stages: [
+        {Actions: [{ActionTypeId: {Category: Source, Owner: ThirdParty, Provider: GitHub, Version: 1}, Configuration: {Owner: !Ref 'GitHubOwner', Branch: !Ref 'GitHubRepoSourceBranch', Repo: !Ref 'GitHubRepo', OAuthToken: !Ref 'GitHubOAuthToken'},
+          InputArtifacts: [], Name: ApplicationSource, OutputArtifacts: [{Name: !Join ['-', [!Ref 'ProjectId', SourceArtifact]]}], RunOrder: 1}], Name: Source},
+        !If [CreateCodeBuildResources, {Actions: [{ActionTypeId: {Category: Build, Owner: AWS, Provider: CodeBuild, Version: 1}, Configuration: {ProjectName: !Ref 'ProjectId'},
+          InputArtifacts: [{Name: !Join ['-', [!Ref 'ProjectId', SourceArtifact]]}], Name: CodeBuild, OutputArtifacts: [{Name: !Join ['-', [!Ref 'ProjectId', BuildArtifact]]}], RunOrder: 1}], Name: Build}, !Ref 'AWS::NoValue'],
+        {Actions: [{ActionTypeId: {Category: Deploy, Owner: AWS, Provider: CodeDeploy, Version: 1}, Configuration: {ApplicationName: !Ref 'CodeDeployApplication', DeploymentGroupName: !Ref 'DeploymentGroup'},
+          InputArtifacts: [!If [CreateCodeBuildResources, {Name: !Join ['-', [!Ref 'ProjectId', BuildArtifact]]}, {Name: !Join ['-', [!Ref 'ProjectId', SourceArtifact]]}]], Name: Deploy, RunOrder: 1}], Name: Application}]
+    Type: AWS::CodePipeline::Pipeline
+  S3ArtifactBucketPolicy:
+    Description: Setting Amazon S3 bucket policy for AWS CodePipeline access
+    Properties:
+      Bucket: !Ref 'S3Bucket'
+      PolicyDocument:
+        Id: SSEAndSSLPolicy
+        Statement: [
+          {Action: 's3:PutObject', Condition: {StringNotEquals: {'s3:x-amz-server-side-encryption': 'aws:kms'}}, Effect: Deny, Principal: '*', Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]], Sid: DenyUnEncryptedObjectUploads}, 
+          {Action: ['s3:GetObject', 's3:GetObjectVersion', 's3:GetBucketVersioning'], Condition: {Bool: {'aws:SecureTransport': false}}, Effect: Allow, Principal: {AWS: [!GetAtt [CodeDeployTrustRole, Arn], !GetAtt [CodePipelineTrustRole, Arn], !GetAtt [WebAppRole, Arn], !If [CreateCodeBuildResources,
+            !GetAtt [CodeBuildRole, Arn], !Ref 'AWS::NoValue']]}, Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket']]], Sid: OnlyCodePipelineGet},
+          {Action: ['s3:PutObject'], Condition: {Bool: {'aws:SecureTransport': true}}, Effect: Allow, Principal: {AWS: [!GetAtt [CodeDeployTrustRole, Arn], !GetAtt [CodePipelineTrustRole, Arn], !GetAtt [WebAppRole, Arn], !If [CreateCodeBuildResources,
+            !GetAtt [CodeBuildRole, Arn], !Ref 'AWS::NoValue']]}, Resource: [!Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket']]], Sid: OnlyCodePipelinePut}]
+    Type: AWS::S3::BucketPolicy
+  S3Bucket:
+    Description: Creating Amazon S3 bucket for AWS CodePipeline artifacts
+    Properties:
+      BucketName: !Join ['-', [aws, !Ref 'ProjectId', !Ref 'AWS::Region', !Ref 'AWS::AccountId', pipe]]
+      Tags: [{Key: Name, Value: !Join ['-', [!Ref 'ProjectId', S3Bucket]]}]
+      VersioningConfiguration:
+        Status: Enabled
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+  # WebServer
+  WebApp:
+    Description: Creating Amazon EC2 instances
+    DependsOn: [Database]
+    Properties:
+      IamInstanceProfile: !Ref 'WebAppInstanceProfile'
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", "value"]
+      InstanceType: !Ref 'InstanceType'
+      KeyName: !Ref 'KeyPairName'
+      NetworkInterfaces: [{AssociatePublicIpAddress: true, DeviceIndex: 0, GroupSet: [
+            !Ref 'WebAppSG'], SubnetId: !If [UseSubnet, !Ref 'SubnetId', !Ref 'AWS::NoValue']}]
+      Tags: [{Key: Environment, Value: !Join ['', [!Ref 'ProjectId', -WebApp]]}, {
+          Key: Name, Value: !Join ['', [!Ref 'ProjectId', -WebApp]]}]
+      UserData: !Base64
+        Fn::Join: ['', ['#!/bin/bash -ex
+
+              ', 'wget -O /usr/local/bin/get_authorized_keys https://s3-us-west-2.amazonaws.com/awscodestar-remote-access-us-west-2/get_authorized_keys
+
+              ', 'chmod 755 /usr/local/bin/get_authorized_keys
+
+              ', 'echo ''AuthorizedKeysCommand /usr/local/bin/get_authorized_keys''
+              >> /etc/ssh/sshd_config
+
+              ', 'echo ''AuthorizedKeysCommandUser root'' >> /etc/ssh/sshd_config
+
+              ', 'service sshd restart
+
+              ', 'apt-get update -y
+
+              ', 'apt-get install python-pip -y
+
+              ', 'pip install --upgrade --user awscli
+
+              ', 'apt-get install ruby -y
+
+              ', '# Install the AWS CodeDeploy Agent.
+
+              ', 'cd /home/ubuntu/
+
+              ', 'wget https://aws-codedeploy-', !Ref 'AWS::Region', '.s3.amazonaws.com/latest/install
+
+              ', 'mv ./install ./install-codedeploy-agent
+
+              ', 'chmod +x ./install-codedeploy-agent
+
+              ', './install-codedeploy-agent auto
+
+              ', '# Install pip and python dev libraries.
+
+              ', 'pip install boto3
+
+              ', 'pip install boto
+
+              ', 'pip install pycrypto
+              
+              ']]
+    Type: AWS::EC2::Instance
+  WebAppInstanceProfile:
+    Description: Creating Amazon EC2 instance profile for instances
+    Properties:
+      Path: /
+      Roles: [!Ref 'WebAppRole']
+    Type: AWS::IAM::InstanceProfile
+  WebAppRole:
+    Description: Creating service role in IAM for Amazon EC2 instances
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement: [{Action: 'sts:AssumeRole', Effect: Allow, Principal: {Service: ec2.amazonaws.com},
+            Sid: ''}]
+      Path: /
+      RoleName: !Join ['-', [CodeStarWorker, !Ref 'ProjectId', WebApp]]
+    Type: AWS::IAM::Role
+  WebAppRolePolicies:
+    Description: Setting IAM policy for service role for Amazon EC2 instances
+    Properties:
+      PolicyDocument:
+        Statement: [
+          {Action: ['ec2:Describe*'], Effect: Allow, Resource: '*'},
+          {Action: ['s3:Get*', 's3:List*'], Effect: Allow, Resource: [!Join ['', ['arn:aws:s3:::', !Join ['-', [aws-codedeploy, !Ref 'AWS::Region']], '*']], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket']], !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]]},
+          {Action: ['s3:GetObject'], Effect: Allow, Resource: [!Join ['', ['arn:aws:s3:::', !Join ['-', [aws, !Ref 'ProjectId', !Ref 'AWS::Region', !Ref 'AWS::AccountId']], !Join [/, ['', !Ref 'ProjectId', ssh/*]]]], 'arn:aws:s3:::awscodestar-remote-access-signatures-us-west-2/*', 'arn:aws:s3:::awscodestar-remote-access-us-west-2/*']},
+          {Action: ['cloudformation:DescribeStackResources'], Effect: Allow, Resource: [!Ref 'AWS::StackId']}, {Action: ['codedeploy:BatchGet*', 'codedeploy:Get*', 'codedeploy:List*'], Effect: Allow, Resource: [!Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', application, !Ref 'CodeDeployApplication']], 
+            !Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', deploymentgroup, !Join [/, [!Ref 'CodeDeployApplication', !Ref 'DeploymentGroup']]]], !Join [':', [arn, aws, codedeploy, !Ref 'AWS::Region', !Ref 'AWS::AccountId', deploymentconfig, '*']]]},
+          {Action: ['s3:*'], Effect: Allow, Resource: !Join ['', ['arn:aws:s3:::', !Ref 'S3FileStorage', /*]]},
+          {Action: ['secretsmanager:ListSecrets'], Effect: Allow, Resource: '*'},
+          {Action: ['secretsmanager:GetSecretValue'], Effect: Allow, Resource: [!Ref 'DatabaseConnectionSecret']},
+          {Action: ['kms:List*', 'kms:Get*', 'kms:Decrypt'], Effect: Allow, Resource: '*'}
+        ]
+      PolicyName: CodeStarWorkerBackendPolicy
+      Roles: [!Ref 'WebAppRole']
+    Type: AWS::IAM::Policy
+  WebAppSG:
+    Description: Creating security group for Amazon EC2 instances
+    Properties:
+      GroupDescription: Enable HTTP access via port 80 and SSH access via port 22.
+      SecurityGroupIngress: [{CidrIp: 0.0.0.0/0, FromPort: 80, IpProtocol: tcp, ToPort: 80},
+        {CidrIp: 0.0.0.0/0, FromPort: 22, IpProtocol: tcp, ToPort: 22}]
+      VpcId: !Ref 'VpcId'
+    Type: AWS::EC2::SecurityGroup
+  # Database
+  Database:
+    Type: AWS::RDS::DBInstance
+    DependsOn: [DatabaseSG]
+    Properties:
+      DBInstanceIdentifier: !Ref 'ProjectId'
+      DBSecurityGroups:
+      - Ref: DatabaseSG
+      AllocatedStorage: '5'
+      DBInstanceClass: db.t2.micro
+      Engine: MySQL
+      PubliclyAccessible: true
+      MasterUsername: admin
+      MasterUserPassword: !Ref 'DatabaseMasterPassword'
+  DatabaseSG:
+    Description: Creating security group for Amazon RDS
+    Properties:
+      GroupDescription: Enable TCP access via port 3306.
+      DBSecurityGroupIngress:
+        CIDRIP: "0.0.0.0/0"
+    Type: AWS::RDS::DBSecurityGroup
+  # S3
+  S3FileStorage:
+    Description: Creating Amazon S3 bucket for applicaiton file storage
+    Properties:
+      BucketName: !Join ['-', [aws, !Ref 'ProjectId', !Ref 'AWS::Region', !Ref 'AWS::AccountId', file-storage]]
+      Tags: [{Key: Name, Value: !Join ['-', [!Ref 'ProjectId', S3Bucket]]}]
+      VersioningConfiguration:
+        Status: Enabled
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+  # Cryptography
+  CMK:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Symmetric CMK
+      KeyPolicy:
+        Id: !Join ['', [!Ref 'ProjectId', 'cmk']]
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Join [':', ['arn:aws:iam:', !Ref 'AWS::AccountId', 'root']]
+          Action: kms:*
+          Resource: '*'
+  CMKAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: !Join ['/', ['alias', !Ref 'ProjectId']]
+      TargetKeyId:
+        Ref: CMK
+  # Secrets
+  DatabaseConnectionSecret:
+    DependsOn: [Database]
+    Type: AWS::SecretsManager::Secret
+    Properties: 
+      Description: Database connection secret
+      KmsKeyId: !Ref 'CMK'
+      Name: !Join ['---', [!Ref 'ProjectId', 'DataAccess']]
+      SecretString: !Sub
+        - '{"DatabaseConnectionString":"Server=${Server};Database=${Database};User=admin;Password=${Password};"}'
+        - Server: !GetAtt 'Database.Endpoint.Address'
+          Database: !Ref 'ProjectId'
+          Password: !Ref 'DatabaseMasterPassword'

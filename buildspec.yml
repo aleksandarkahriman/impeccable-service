@@ -22,5 +22,5 @@ phases:
 artifacts:
   files:
     - build_output/**/*
-    - scripts/**/*
+    - DeploymentScripts/**/*
     - appspec.yml

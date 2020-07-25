@@ -7,25 +7,25 @@ files:
     destination: /home/ubuntu/app
 hooks:
   ApplicationStop:
-    - location: scripts/stop_service
+    - location: DeploymentScripts/stop_service
       timeout: 300
       runas: root
 
   BeforeInstall:
-    - location: scripts/remove_application
+    - location: DeploymentScripts/remove_application
       timeout: 300
       runas: root
 
   AfterInstall:
-    - location: scripts/install_dotnetcore
+    - location: DeploymentScripts/install_dotnetcore
       timeout: 500
       runas: root
 
-    - location: scripts/install_httpd
+    - location: DeploymentScripts/install_httpd
       timeout: 300
       runas: root
 
   ApplicationStart:
-    - location: scripts/start_service
+    - location: DeploymentScripts/start_service
       timeout: 300
       runas: root
