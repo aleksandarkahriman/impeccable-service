@@ -3,7 +3,7 @@ os: linux
 files:
   - source: build_output
     destination: /home/ubuntu/app
-  - source: scripts/virtualhost.conf
+  - source: DeploymentScripts/virtualhost.conf
     destination: /home/ubuntu/app
 hooks:
   ApplicationStop:
