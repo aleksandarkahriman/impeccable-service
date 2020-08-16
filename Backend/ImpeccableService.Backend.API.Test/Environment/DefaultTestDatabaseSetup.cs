@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using ImpeccableService.Backend.Database;
+using ImpeccableService.Backend.Database.Offering.Model;
 using ImpeccableService.Backend.Database.UserManagement.Model;
 
 namespace ImpeccableService.Backend.API.Test.Environment
@@ -22,6 +24,9 @@ namespace ImpeccableService.Backend.API.Test.Environment
 
             var validTestUser = TestUserRegistry.ValidTestUser();
             _context.Users.Add(_mapper.Map<UserEntity>(validTestUser));
+
+            var menuEntity = new MenuEntity { Id = Guid.NewGuid().ToString(), VenueId = "4ccb" };
+            _context.Menus.Add(menuEntity);
 
             _context.SaveChanges();
         }

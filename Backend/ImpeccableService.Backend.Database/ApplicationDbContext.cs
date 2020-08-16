@@ -1,4 +1,5 @@
-﻿using ImpeccableService.Backend.Database.UserManagement.Model;
+﻿using ImpeccableService.Backend.Database.Offering.Model;
+using ImpeccableService.Backend.Database.UserManagement.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace ImpeccableService.Backend.Database
@@ -13,5 +14,7 @@ namespace ImpeccableService.Backend.Database
         public DbSet<UserEntity> Users { get; set; }
 
         public DbSet<SessionEntity> Sessions { get; set; }
+        
+        public DbSet<MenuEntity> Menus { get; set; }
     }
 }

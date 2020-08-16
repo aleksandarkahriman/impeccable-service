@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using ImpeccableService.Backend.Core.Offering.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
+using ImpeccableService.Backend.Database.Offering;
 using ImpeccableService.Backend.Database.UserManagement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +27,8 @@ namespace ImpeccableService.Backend.Database
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IMenuRepository, MenuRepository>();
 
             return services;
         }

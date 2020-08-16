@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using ImpeccableService.Backend.Core.Offering;
 using ImpeccableService.Backend.Core.UserManagement;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,9 @@ namespace ImpeccableService.Backend.Core
 
             services.AddScoped<UserService>();
             services.AddScoped<IUserService>(provider => provider.GetService<UserService>());
+
+            services.AddScoped<MenuService>();
+            services.AddScoped<IMenuService>(provider => provider.GetService<MenuService>());
 
             return services;
         }
