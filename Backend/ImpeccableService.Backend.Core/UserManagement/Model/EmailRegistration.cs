@@ -1,8 +1,8 @@
-﻿namespace ImpeccableService.Backend.Domain.UserManagement
+﻿namespace ImpeccableService.Backend.Core.UserManagement.Model
 {
-    public class EmailLogin
+    public class EmailRegistration
     {
-        public EmailLogin(string email, string password)
+        public EmailRegistration(string email, string password)
         {
             Email = email;
             Password = password;

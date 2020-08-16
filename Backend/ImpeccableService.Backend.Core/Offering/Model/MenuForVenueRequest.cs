@@ -1,4 +1,4 @@
-namespace ImpeccableService.Backend.Domain.Offering
+namespace ImpeccableService.Backend.Core.Offering.Model
 {
     public class MenuForVenueRequest
     {

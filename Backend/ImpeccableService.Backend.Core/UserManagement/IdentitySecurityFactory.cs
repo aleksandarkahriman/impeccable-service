@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
+using ImpeccableService.Backend.Core.UserManagement.Model;
 using ImpeccableService.Backend.Domain.UserManagement;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;

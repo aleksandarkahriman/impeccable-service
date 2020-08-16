@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using ImpeccableService.Backend.Core.Context;
+using ImpeccableService.Backend.Core.UserManagement.Model;
 using ImpeccableService.Backend.Domain.UserManagement;
 
 namespace ImpeccableService.Backend.API.UserManagement.Dto

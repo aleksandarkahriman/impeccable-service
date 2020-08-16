@@ -4,6 +4,7 @@ using AutoMapper;
 using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.Offering;
+using ImpeccableService.Backend.Core.Offering.Model;
 using ImpeccableService.Backend.Domain.Offering;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

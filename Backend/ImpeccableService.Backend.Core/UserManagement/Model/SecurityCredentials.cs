@@ -1,4 +1,4 @@
-﻿namespace ImpeccableService.Backend.Domain.UserManagement
+﻿namespace ImpeccableService.Backend.Core.UserManagement.Model
 {
     public class SecurityCredentials
     {
