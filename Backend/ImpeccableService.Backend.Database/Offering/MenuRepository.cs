@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.Core.Offering.Dependency;
@@ -21,7 +22,10 @@ namespace ImpeccableService.Backend.Database.Offering
         
         public async Task<ResultWithData<Menu>> ReadByVenueId(string venueId)
         {
-            var menuEntity = await _dbContext.Menus.FirstOrDefaultAsync(menu => menu.VenueId == venueId);
+            var menuEntity = await _dbContext.Menus
+                .Where(menu => menu.VenueId == venueId)
+                .Include(menu => menu.Sections)
+                .FirstOrDefaultAsync();
 
             return menuEntity != null
                 ? new ResultWithData<Menu>(_mapper.Map<Menu>(menuEntity))

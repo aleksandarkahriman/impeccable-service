@@ -1,8 +1,6 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.Database;
-using ImpeccableService.Backend.Database.Offering.Model;
-using ImpeccableService.Backend.Database.UserManagement.Model;
 
 namespace ImpeccableService.Backend.API.Test.Environment
 {
@@ -21,12 +19,9 @@ namespace ImpeccableService.Backend.API.Test.Environment
         {
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
-
-            var validTestUser = TestUserRegistry.ValidTestUser();
-            _context.Users.Add(_mapper.Map<UserEntity>(validTestUser));
-
-            var menuEntity = new MenuEntity { Id = Guid.NewGuid().ToString(), VenueId = "4ccb" };
-            _context.Menus.Add(menuEntity);
+            
+            _context.AddTestUsers(_mapper);
+            _context.AddTestOfferings();
 
             _context.SaveChanges();
         }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ImpeccableService.Backend.API.Offering.Dto
@@ -6,5 +7,8 @@ namespace ImpeccableService.Backend.API.Offering.Dto
     {
         [Required]
         public string Id { get; set; }
+        
+        [Required]
+        public List<GetSectionDto> Sections { get; set; } 
     }
 }

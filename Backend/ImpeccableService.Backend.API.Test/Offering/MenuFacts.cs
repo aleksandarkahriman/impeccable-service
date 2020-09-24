@@ -57,6 +57,23 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Assert
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
+
+            [Fact]
+            public async Task ReturnsMenuWithMultipleSections()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestUser());
+                
+                // Act
+                var response = await client.GetAsync("/api/venue/4ccb/menu");
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getMenuDto = JsonConvert.DeserializeObject<GetMenuDto>(responseBody);
+
+                // Assert
+                Assert.NotEmpty(getMenuDto.Sections);
+            }
         }
     }
 }

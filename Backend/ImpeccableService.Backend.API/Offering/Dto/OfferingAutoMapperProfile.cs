@@ -8,6 +8,7 @@ namespace ImpeccableService.Backend.API.Offering.Dto
         public OfferingAutoMapperProfile()
         {
             CreateMap<Menu, GetMenuDto>();
+            CreateMap<Section, GetSectionDto>();
         }
     }
 }

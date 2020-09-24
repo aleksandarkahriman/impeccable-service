@@ -1,17 +1,18 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ImpeccableService.Backend.Database.Offering.Model
 {
-    [Table("menu")]
-    internal class MenuEntity
+    [Table("section")]
+    internal class SectionEntity
     {
         [Key]
         public string Id { get; set; }
         
-        public string VenueId { get; set; }
+        public string MenuId { get; set; }
         
-        public List<SectionEntity> Sections { get; set; }
+        public MenuEntity Menu { get; set; }
+        
+        public string Name { get; set; }
     }
 }
