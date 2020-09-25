@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.API.Offering.Dto;
@@ -73,6 +74,23 @@ namespace ImpeccableService.Backend.API.Test.Offering
 
                 // Assert
                 Assert.NotEmpty(getMenuDto.Sections);
+            }
+            
+            [Fact]
+            public async Task ReturnsMenuWithMultipleItemsInBreakfastSection()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestUser());
+                
+                // Act
+                var response = await client.GetAsync("/api/venue/4ccb/menu");
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getMenuDto = JsonConvert.DeserializeObject<GetMenuDto>(responseBody);
+
+                // Assert
+                Assert.NotEmpty(getMenuDto.Sections.FirstOrDefault(section => section.Name == "Breakfast").Items);
             }
         }
     }

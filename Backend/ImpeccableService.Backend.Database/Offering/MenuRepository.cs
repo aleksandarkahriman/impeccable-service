@@ -25,6 +25,7 @@ namespace ImpeccableService.Backend.Database.Offering
             var menuEntity = await _dbContext.Menus
                 .Where(menu => menu.VenueId == venueId)
                 .Include(menu => menu.Sections)
+                .ThenInclude(section => section.Items)
                 .FirstOrDefaultAsync();
 
             return menuEntity != null

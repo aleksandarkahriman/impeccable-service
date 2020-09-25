@@ -1,8 +1,8 @@
 namespace ImpeccableService.Backend.Domain.Offering
 {
-    public class Section
+    public class MenuItem
     {
-        public Section(string id, string name)
+        public MenuItem(string id, string name)
         {
             Id = id;
             Name = name;

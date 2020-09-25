@@ -8,7 +8,8 @@ namespace ImpeccableService.Backend.Database.Offering.Model
         public OfferingAutoMapperProfile()
         {
             CreateMap<MenuEntity, Menu>();
-            CreateMap<SectionEntity, Section>();
+            CreateMap<MenuSectionEntity, MenuSection>();
+            CreateMap<MenuItemEntity, MenuItem>();
         }
     }
 }

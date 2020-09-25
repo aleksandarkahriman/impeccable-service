@@ -4,7 +4,7 @@ namespace ImpeccableService.Backend.Domain.Offering
 {
     public class Menu
     {
-        public Menu(string id, List<Section> sections)
+        public Menu(string id, List<MenuSection> sections)
         {
             Id = id;
             Sections = sections;
@@ -12,6 +12,6 @@ namespace ImpeccableService.Backend.Domain.Offering
 
         public string Id { get; }
         
-        public List<Section> Sections { get; }
+        public List<MenuSection> Sections { get; }
     }
 }

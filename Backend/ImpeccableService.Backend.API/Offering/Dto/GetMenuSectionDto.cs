@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ImpeccableService.Backend.API.Offering.Dto
 {
-    public class GetMenuDto
+    public class GetMenuSectionDto
     {
         [Required]
-        public string Id { get; set; }
+        public string Name { get; set; }
         
         [Required]
-        public List<GetMenuSectionDto> Sections { get; set; } 
+        public List<GetMenuItemDto> Items { get; set; }
     }
 }
