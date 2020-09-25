@@ -1,7 +1,7 @@
 ﻿using ImpeccableService.Backend.Core.UserManagement.Model;
 using ImpeccableService.Backend.Domain.UserManagement;
 
-namespace ImpeccableService.Backend.API.Test.Environment
+namespace ImpeccableService.Backend.API.Test.Environment.Data
 {
     public static class TestUserRegistry
     {

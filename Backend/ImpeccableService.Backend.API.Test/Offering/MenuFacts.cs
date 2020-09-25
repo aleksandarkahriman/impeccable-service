@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.API.Test.Environment;
+using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.API.Test.Utility;
 using Newtonsoft.Json;
 using Utility.Test;
@@ -91,6 +92,29 @@ namespace ImpeccableService.Backend.API.Test.Offering
 
                 // Assert
                 Assert.NotEmpty(getMenuDto.Sections.FirstOrDefault(section => section.Name == "Breakfast").Items);
+            }
+            
+            [Fact]
+            public async Task ReturnsValidMenuItemImageUrls()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestUser());
+
+                // Act
+                var response = await client.GetAsync("/api/venue/4ccb/menu");
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getMenuDto =
+                    JsonConvert.DeserializeObject<GetMenuDto>(responseBody);
+
+                // Assert
+                Assert.All(getMenuDto.Sections.SelectMany(section => section.Items), item =>
+                {
+                    Assert.Contains("Amz", item.Thumbnail.Url);
+                    Assert.Contains("Credential", item.Thumbnail.Url);
+                    Assert.Contains("Signature", item.Thumbnail.Url);
+                });
             }
         }
     }

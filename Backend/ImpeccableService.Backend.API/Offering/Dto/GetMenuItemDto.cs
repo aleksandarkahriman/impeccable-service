@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ImpeccableService.Backend.API.Utility.Dto;
 
 namespace ImpeccableService.Backend.API.Offering.Dto
 {
@@ -6,5 +7,8 @@ namespace ImpeccableService.Backend.API.Offering.Dto
     {
         [Required]
         public string Name { get; set; }
+        
+        [Required]
+        public ImageDto Thumbnail { get; set; }
     }
 }
