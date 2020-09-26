@@ -57,7 +57,8 @@ namespace ImpeccableService.Backend.Core.UserManagement
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email) 
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role) 
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

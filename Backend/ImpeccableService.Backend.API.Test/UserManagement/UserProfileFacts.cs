@@ -31,7 +31,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestUser());
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
 
                 // Act
                 var response = await client.GetAsync("/api/user/me");
@@ -40,7 +40,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                     JsonConvert.DeserializeObject<GetUserProfileDto>(responseBody);
 
                 // Assert
-                Assert.Equal(TestUserRegistry.ValidTestUser().Email, getUserProfileDto.Email);
+                Assert.Equal(TestUserRegistry.ValidTestConsumerUser().Email, getUserProfileDto.Email);
             }
 
             [Fact]
@@ -49,7 +49,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestUser());
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
 
                 // Act
                 var response = await client.GetAsync("/api/user/me");
@@ -58,7 +58,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                     JsonConvert.DeserializeObject<GetUserProfileDto>(responseBody);
 
                 // Assert
-                Assert.Equal(TestUserRegistry.ValidTestUser().Role, getUserProfileDto.Role);
+                Assert.Equal(TestUserRegistry.ValidTestConsumerUser().Role, getUserProfileDto.Role);
             }
 
             [Fact]
@@ -67,7 +67,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestUser());
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
 
                 // Act
                 var response = await client.GetAsync("/api/user/me");

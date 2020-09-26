@@ -4,10 +4,8 @@ using Utility.Application.ResultContract;
 
 namespace ImpeccableService.Backend.Core.Offering.Dependency
 {
-    public interface IMenuRepository
+    public interface IVenueRepository
     {
-        Task<ResultWithData<Menu>> ReadByVenueId(string venueId);
-        
-        Task<ResultWithData<Menu>> Create(Menu menu);
+        Task<ResultWithData<Venue>> Read(string id);
     }
 }

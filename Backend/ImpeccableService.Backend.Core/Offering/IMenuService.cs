@@ -8,6 +8,8 @@ namespace ImpeccableService.Backend.Core.Offering
 {
     public interface IMenuService
     {
-        Task<ResultWithData<Menu>> GetMenuForVenue(RequestContextWithModel<MenuForVenueRequest> menuForVenueRequest);
+        Task<ResultWithData<Menu>> GetMenuForVenue(RequestContextWithModel<GetMenuForVenueRequest> createMenuForVenueRequest);
+
+        Task<ResultWithData<Menu>> CreateMenuForVenue(RequestContextWithModel<CreateMenuForVenueRequest> createMenuForVenueRequest);
     }
 }

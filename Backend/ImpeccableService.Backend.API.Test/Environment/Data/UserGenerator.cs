@@ -8,8 +8,11 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
     {
         internal static void AddTestUsers(this ApplicationDbContext context, IMapper mapper)
         {
-            var validTestUser = TestUserRegistry.ValidTestUser();
-            context.Users.Add(mapper.Map<UserEntity>(validTestUser));
+            var validTestConsumerUser = TestUserRegistry.ValidTestConsumerUser();
+            context.Users.Add(mapper.Map<UserEntity>(validTestConsumerUser));
+
+            var validTestProviderAdminUser = TestUserRegistry.ValidTestProviderAdminUser();
+            context.Users.Add(mapper.Map<UserEntity>(validTestProviderAdminUser));
         }
     }
 }

@@ -136,7 +136,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestUser());
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
 
                 // Act
                 var response = await client.GetAsync("/api/user/me");

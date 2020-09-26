@@ -29,6 +29,7 @@ namespace ImpeccableService.Backend.Database
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IMenuRepository, MenuRepository>();
+            services.AddScoped<IVenueRepository, VenueRepository>();
 
             return services;
         }

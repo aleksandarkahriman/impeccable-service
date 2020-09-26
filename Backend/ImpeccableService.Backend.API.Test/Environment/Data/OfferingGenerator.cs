@@ -11,6 +11,10 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
     {
         internal static void AddTestOfferings(this ApplicationDbContext context)
         {
+            var venueEntity = new VenueEntity { Id = "4ccb" };
+
+            context.Venues.Add(venueEntity);
+            
             var menuEntity = new MenuEntity { Id = Guid.NewGuid().ToString(), VenueId = "4ccb" };
 
             var englishBreakfastId = Guid.NewGuid().ToString();

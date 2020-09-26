@@ -1,8 +1,8 @@
 namespace ImpeccableService.Backend.Core.Offering.Model
 {
-    public class MenuForVenueRequest
+    public class GetMenuForVenueRequest
     {
-        public MenuForVenueRequest(string venueId)
+        public GetMenuForVenueRequest(string venueId)
         {
             VenueId = venueId;
         }

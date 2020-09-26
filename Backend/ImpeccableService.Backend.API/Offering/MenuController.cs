@@ -4,6 +4,7 @@ using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.Offering;
 using ImpeccableService.Backend.Core.Offering.Model;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,12 +25,24 @@ namespace ImpeccableService.Backend.API.Offering
         }
 
         [HttpGet("venue/{venueId}/menu")]
-        public async Task<IActionResult> MenuForVenue(string venueId)
+        public async Task<IActionResult> GetMenuForVenue(string venueId)
         {
-            var menuResult = await _menuService.GetMenuForVenue(new RequestContextWithModel<MenuForVenueRequest>(new MenuForVenueRequest(venueId), 
+            var menuResult = await _menuService.GetMenuForVenue(new RequestContextWithModel<GetMenuForVenueRequest>(new GetMenuForVenueRequest(venueId), 
                     _mapper.Map<Identity>(User)));
             return menuResult.Success
                 ? Ok(_mapper.Map<GetMenuDto>(menuResult.Data))
+                : (IActionResult)NotFound();
+        }
+
+        [HttpPost("venue/{venueId}/menu")]
+        [Authorize(Roles = UserRole.ProviderAdmin)]
+        public async Task<IActionResult> CreateMenuForVenue(string venueId, PostMenuDto postMenuDto)
+        {
+            var menuResult = await _menuService.CreateMenuForVenue(
+                new RequestContextWithModel<CreateMenuForVenueRequest>(new CreateMenuForVenueRequest(venueId)));
+
+            return menuResult.Success
+                ? Created(string.Empty, _mapper.Map<GetMenuDto>(menuResult.Data))
                 : (IActionResult)NotFound();
         }
     }
