@@ -13,6 +13,7 @@ namespace ImpeccableService.Backend.Database.Offering.Model
             CreateMap<MenuItemEntity, MenuItem>();
 
             CreateMap<VenueEntity, Venue>();
+            CreateMap<Venue, VenueEntity>();
         }
     }
 }

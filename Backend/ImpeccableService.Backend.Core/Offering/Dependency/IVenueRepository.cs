@@ -7,5 +7,7 @@ namespace ImpeccableService.Backend.Core.Offering.Dependency
     public interface IVenueRepository
     {
         Task<ResultWithData<Venue>> Read(string id);
+
+        Task<ResultWithData<Venue>> Create(Venue venue);
     }
 }

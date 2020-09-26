@@ -21,6 +21,9 @@ namespace ImpeccableService.Backend.Core
             services.AddScoped<MenuService>();
             services.AddScoped<IMenuService>(provider => provider.GetService<MenuService>());
 
+            services.AddScoped<VenueService>();
+            services.AddScoped<IVenueService>(provider => provider.GetService<VenueService>());
+
             return services;
         }
     }

@@ -10,6 +10,8 @@ namespace ImpeccableService.Backend.API.Offering.Dto
             CreateMap<Menu, GetMenuDto>();
             CreateMap<MenuSection, GetMenuSectionDto>();
             CreateMap<MenuItem, GetMenuItemDto>();
+            
+            CreateMap<Venue, GetVenueDto>();
         }
     }
 }
