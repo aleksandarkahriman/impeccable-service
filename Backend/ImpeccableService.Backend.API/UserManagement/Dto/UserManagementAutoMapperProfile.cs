@@ -24,6 +24,8 @@ namespace ImpeccableService.Backend.API.UserManagement.Dto
                 });
 
             CreateMap<User, GetUserProfileDto>();
+
+            CreateMap<Company, GetCompanyDto>();
         }
     }
 }

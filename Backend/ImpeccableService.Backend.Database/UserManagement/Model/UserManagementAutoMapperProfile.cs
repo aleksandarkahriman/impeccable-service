@@ -9,6 +9,8 @@ namespace ImpeccableService.Backend.Database.UserManagement.Model
         {
             CreateMap<User, UserEntity>();
             CreateMap<UserEntity, User>();
+
+            CreateMap<Company, CompanyEntity>();
         }
     }
 }

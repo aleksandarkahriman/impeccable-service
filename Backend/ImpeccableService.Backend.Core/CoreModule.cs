@@ -18,6 +18,9 @@ namespace ImpeccableService.Backend.Core
             services.AddScoped<UserService>();
             services.AddScoped<IUserService>(provider => provider.GetService<UserService>());
 
+            services.AddScoped<CompanyService>();
+            services.AddScoped<ICompanyService, CompanyService>(provider => provider.GetService<CompanyService>());
+
             services.AddScoped<MenuService>();
             services.AddScoped<IMenuService>(provider => provider.GetService<MenuService>());
 
