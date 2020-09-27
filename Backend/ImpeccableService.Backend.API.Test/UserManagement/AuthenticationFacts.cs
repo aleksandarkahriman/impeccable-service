@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,6 +9,9 @@ using System.Threading.Tasks;
 using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.API.UserManagement.Dto;
+using ImpeccableService.Backend.Database;
+using ImpeccableService.Backend.Domain.UserManagement;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Utility.Test;
 using Xunit;
@@ -21,6 +25,20 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
         {
             private readonly EnvironmentFactory _factory;
 
+            private readonly string _consumerRequest = JsonConvert.SerializeObject(new EmailRegistrationDto
+            {
+                Email = "consumer@domain.com",
+                Password = "password",
+                Role = UserRole.Consumer
+            });
+
+            private readonly EmailRegistrationDto _providerAdminRegistrationDto = new EmailRegistrationDto
+            {
+                Email = "providerAdmin@domain.com",
+                Password = "password",
+                Role = UserRole.ProviderAdmin
+            };
+
             public EmailRegistration(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
             {
                 _factory = factory;
@@ -31,21 +49,58 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 });
             }
 
+            public string ProviderAdminRequest => JsonConvert.SerializeObject(_providerAdminRegistrationDto);
+
             [Fact]
             public async Task ReturnsCreatedStatus()
             {
                 // Arrange
                 var client = _factory.CreateClient();
-
-                var emailRegistration = new EmailRegistrationDto("user@domain.com", "password");
-                var requestBody = JsonConvert.SerializeObject(emailRegistration);
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
+                
                 // Act
+                var requestContent = new StringContent(_consumerRequest, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/api/authentication/register", requestContent);
 
                 // Assert
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            }
+
+            [Fact]
+            public async Task DoesNotAllowTheCreationOfSystemAdmin()
+            {
+                // Arrange
+                var client = _factory.CreateClient();
+                
+                var systemAdminRequest = JsonConvert.SerializeObject(new EmailRegistrationDto
+                {
+                    Email = "systemAdmin@domain.com",
+                    Password = "password",
+                    Role = UserRole.SystemAdmin
+                });
+                
+                // Act
+                var requestContent = new StringContent(systemAdminRequest, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/authentication/register", requestContent);
+
+                // Assert
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            }
+
+            [Fact]
+            public async Task PersistsUserWithCorrectRole()
+            {
+                // Arrange
+                var client = _factory.CreateClient();
+                
+                // Act
+                var requestContent = new StringContent(ProviderAdminRequest, Encoding.UTF8, "application/json");
+                await client.PostAsync("/api/authentication/register", requestContent);
+
+                // Assert
+                using var scope = _factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var userEntity = dbContext.Users.FirstOrDefault(user => user.Email == _providerAdminRegistrationDto.Email);
+                Assert.Equal(UserRole.ProviderAdmin, userEntity.Role);
             }
         }
 

@@ -27,28 +27,29 @@ namespace ImpeccableService.Backend.Core.UserManagement
 
         public async Task<Result> RegisterWithEmail(RequestContextWithModel<EmailRegistration> emailRegistrationRequest)
         {
-            var emailRegistration = emailRegistrationRequest.Model;
+            var model = emailRegistrationRequest.Model;
 
-            var userExistsResult = await _userRepository.UserWithEmailExists(emailRegistration.Email);
+            var userExistsResult = await _userRepository.UserWithEmailExists(model.Email);
             if (userExistsResult.Failure)
             {
                 _logger.Warning(userExistsResult.ErrorReason,
-                    $"User email existence check failed for user with email {emailRegistration.Email}.");
+                    $"User email existence check failed for user with email {model.Email}.");
                 return new Result(userExistsResult.ErrorReason);
             }
 
             if (userExistsResult.Data)
             {
-                _logger.Info($"User with email {emailRegistration.Email} already exists.");
+                _logger.Info($"User with email {model.Email} already exists.");
                 return new Result(new RegisterWithEmailException(RegisterWithEmailException.ErrorCause.EmailExists));
             }
 
-            var user = new User(emailRegistration.Email, _identitySecurityFactory.HashPassword(emailRegistration.Password), new DefaultUserProfileImage());
+            var user = new User(0, model.Email, _identitySecurityFactory.HashPassword(model.Password), 
+                model.Role, new DefaultUserProfileImage());
 
             var createResult = await _userRepository.Create(user);
             if (createResult.Failure)
             {
-                _logger.Warning(createResult.ErrorReason, $"Creation of user with email {emailRegistration.Email} failed.");
+                _logger.Warning(createResult.ErrorReason, $"Creation of user with email {model.Email} failed.");
                 return new Result(createResult.ErrorReason);
             }
             

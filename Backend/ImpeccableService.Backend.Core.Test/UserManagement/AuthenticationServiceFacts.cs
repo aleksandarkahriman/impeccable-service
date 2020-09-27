@@ -30,6 +30,9 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             private readonly Mock<IUserRepository> _userRepositoryMock;
 
             private readonly AuthenticationService _authenticationService;
+            
+            private readonly RequestContextWithModel<EmailRegistration> _validEmailRegistration = new RequestContextWithModel<EmailRegistration>(
+                new EmailRegistration("user@domain.com", "password", UserRole.Consumer));
 
             public RegisterWithEmailMethod(ITestOutputHelper testOutputHelper)
             {
@@ -50,12 +53,11 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ReturnsErrorIfEmailIsAlreadyRegistered()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
-                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
+                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(_validEmailRegistration.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(true));
 
                 // Act
-                var result = await _authenticationService.RegisterWithEmail(emailRegistrationRequest);
+                var result = await _authenticationService.RegisterWithEmail(_validEmailRegistration);
 
                 // Assert
                 Assert.Equal(RegisterWithEmailException.ErrorCause.EmailExists, ((RegisterWithEmailException)result.ErrorReason).Cause);
@@ -65,13 +67,12 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromUserRepositoryEmailCheck()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
                 var expectedError = new Exception("Email check failed.");
-                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
+                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(_validEmailRegistration.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(expectedError));
 
                 // Act
-                var result = await _authenticationService.RegisterWithEmail(emailRegistrationRequest);
+                var result = await _authenticationService.RegisterWithEmail(_validEmailRegistration);
 
                 // Assert
                 Assert.Equal(expectedError, result.ErrorReason);
@@ -81,15 +82,14 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task CreatesAndSavesNewUser()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
-                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
+                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(_validEmailRegistration.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
                 _userRepositoryMock.Setup(mock => mock.Create(It.IsAny<User>()))
                     .ReturnsAsync(new ResultWithData<User>(ValidUser));
             
                 // Act
-                await _authenticationService.RegisterWithEmail(emailRegistrationRequest);
+                await _authenticationService.RegisterWithEmail(_validEmailRegistration);
             
                 // Assert
                 _userRepositoryMock.Verify(mock => mock.Create(It.IsAny<User>()), Times.Once);
@@ -99,8 +99,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             public async Task ForwardsErrorReturnedFromUserRepositorySave()
             {
                 // Arrange
-                var emailRegistrationRequest = new RequestContextWithModel<EmailRegistration>(new EmailRegistration("user@domain.com", "password"));
-                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(emailRegistrationRequest.Model.Email))
+                _userRepositoryMock.Setup(mock => mock.UserWithEmailExists(_validEmailRegistration.Model.Email))
                     .ReturnsAsync(new ResultWithData<bool>(false));
 
                 var expectedError = new Exception("Email check failed.");
@@ -108,7 +107,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
                     .ReturnsAsync(new ResultWithData<User>(expectedError));
 
                 // Act
-                var result = await _authenticationService.RegisterWithEmail(emailRegistrationRequest);
+                var result = await _authenticationService.RegisterWithEmail(_validEmailRegistration);
 
                 // Assert
                 Assert.Equal(expectedError, result.ErrorReason);
