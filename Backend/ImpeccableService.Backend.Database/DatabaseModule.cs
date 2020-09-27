@@ -23,7 +23,7 @@ namespace ImpeccableService.Backend.Database
                     .UseMySql(connectionString, mySqlOptions =>
                         mySqlOptions
                             .ServerVersion(new Version(8, 0, 19), ServerType.MySql)
-                    );
+                    ).UseSnakeCaseNamingConvention();
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
