@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Core.UserManagement.Error;
@@ -43,7 +44,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
                 return new Result(new RegisterWithEmailException(RegisterWithEmailException.ErrorCause.EmailExists));
             }
 
-            var user = new User(0, model.Email, _identitySecurityFactory.HashPassword(model.Password), 
+            var user = new User(Guid.NewGuid().ToString(), model.Email, _identitySecurityFactory.HashPassword(model.Password), 
                 model.Role, new DefaultUserProfileImage());
 
             var createResult = await _userRepository.Create(user);

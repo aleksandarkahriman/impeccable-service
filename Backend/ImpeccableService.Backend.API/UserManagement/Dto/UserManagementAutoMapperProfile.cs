@@ -17,7 +17,7 @@ namespace ImpeccableService.Backend.API.UserManagement.Dto
             CreateMap<ClaimsPrincipal, Identity>()
                 .ConstructUsing((principal, context) =>
                 {
-                    var id = int.Parse(principal.FindFirstValue(ClaimTypes.PrimarySid));
+                    var id = principal.FindFirstValue(ClaimTypes.PrimarySid);
                     var email = principal.FindFirstValue(ClaimTypes.Email);
 
                     return new Identity(id, email);

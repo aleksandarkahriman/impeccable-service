@@ -28,8 +28,8 @@ namespace ImpeccableService.Backend.API.UserManagement
         [Authorize(Roles = UserRole.ProviderAdmin)]
         public async Task<IActionResult> CreateCompany(PostCompanyDto postCompanyDto)
         {
-            var createCompanyRequest =
-                new RequestContextWithModel<CreateCompanyRequest>(new CreateCompanyRequest(postCompanyDto.Name));
+            var createCompanyRequest = new RequestContextWithModel<CreateCompanyRequest>(
+                new CreateCompanyRequest(postCompanyDto.Name), _mapper.Map<Identity>(User));
             var companyResult = await _companyService.CreateCompany(createCompanyRequest);
             return Created(string.Empty, _mapper.Map<GetCompanyDto>(companyResult.Data));
         }

@@ -4,7 +4,7 @@ namespace ImpeccableService.Backend.Domain.UserManagement
 {
     public class User
     {
-        public User(int id, string email, string passwordHash, string role, Image profileImage)
+        public User(string id, string email, string passwordHash, string role, Image profileImage)
         {
             Id = id;
             Email = email;
@@ -13,7 +13,7 @@ namespace ImpeccableService.Backend.Domain.UserManagement
             ProfileImage = profileImage;
         }
 
-        public int Id { get; }
+        public string Id { get; }
 
         public string Email { get; }
 

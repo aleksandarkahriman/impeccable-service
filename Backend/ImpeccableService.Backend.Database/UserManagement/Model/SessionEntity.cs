@@ -24,7 +24,7 @@ namespace ImpeccableService.Backend.Database.UserManagement.Model
         [Key]
         public string Id { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public UserEntity User { get; set; }
 

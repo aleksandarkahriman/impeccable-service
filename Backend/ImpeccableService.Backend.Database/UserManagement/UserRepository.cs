@@ -61,7 +61,7 @@ namespace ImpeccableService.Backend.Database.UserManagement
             throw new System.NotImplementedException();
         }
 
-        public async Task<ResultWithData<User>> Read(int id)
+        public async Task<ResultWithData<User>> Read(string id)
         {
             var userEntity = await _dbContext.Users
                 .FirstOrDefaultAsync(user => user.Id == id);

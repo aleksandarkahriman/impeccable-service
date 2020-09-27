@@ -18,9 +18,10 @@ namespace ImpeccableService.Backend.Database.UserManagement
             _mapper = mapper;
         }
         
-        public async Task<ResultWithData<Company>> Create(Company company)
+        public async Task<ResultWithData<Company>> Create(Company company, string ownerId)
         {
             var companyEntity = _mapper.Map<CompanyEntity>(company);
+            companyEntity.OwnerId = ownerId;
             await _dbContext.Companies.AddAsync(companyEntity);
             await _dbContext.SaveChangesAsync();
             return new ResultWithData<Company>(company);

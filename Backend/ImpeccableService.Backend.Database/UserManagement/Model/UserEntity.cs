@@ -10,8 +10,7 @@ namespace ImpeccableService.Backend.Database.UserManagement.Model
     internal class UserEntity
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Email { get; set; }
 

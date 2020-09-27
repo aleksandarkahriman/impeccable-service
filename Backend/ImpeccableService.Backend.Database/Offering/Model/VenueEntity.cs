@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ImpeccableService.Backend.Database.Offering.Model
 {
     [Table("venue")]
-    public class VenueEntity
+    internal class VenueEntity
     {
         [Key]
         public string Id { get; set; }

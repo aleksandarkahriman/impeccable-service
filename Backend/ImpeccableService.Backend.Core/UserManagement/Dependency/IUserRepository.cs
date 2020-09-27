@@ -17,6 +17,6 @@ namespace ImpeccableService.Backend.Core.UserManagement.Dependency
 
         Task<ResultWithData<User>> ReadByRefreshToken(string refreshToken);
 
-        Task<ResultWithData<User>> Read(int id);
+        Task<ResultWithData<User>> Read(string id);
     }
 }

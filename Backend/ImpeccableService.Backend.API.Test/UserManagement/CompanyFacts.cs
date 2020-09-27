@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -106,6 +107,27 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Assert
                 var newCompanyCount = await dbContext.Companies.CountAsync();
                 Assert.Equal(companyCount + 1, newCompanyCount);
+            }
+
+            [Fact]
+            public async Task GrantsCompanyOwnershipToTheProviderAdministratorThatCreatedIt()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+
+                // Act
+                var requestContent = new StringContent(Request, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/company", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getCompanyDto = JsonConvert.DeserializeObject<GetCompanyDto>(responseBody);
+                
+                // Assert
+                using var scope = _factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var companyEntity = await dbContext.Companies.FirstOrDefaultAsync(company => company.Id == getCompanyDto.Id);
+                Assert.Equal(TestUserRegistry.ValidTestProviderAdminUser().Id, companyEntity.OwnerId);
             }
         }
     }

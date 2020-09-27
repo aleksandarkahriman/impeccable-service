@@ -56,7 +56,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
+                    new Claim(ClaimTypes.PrimarySid, user.Id),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role) 
                 }),

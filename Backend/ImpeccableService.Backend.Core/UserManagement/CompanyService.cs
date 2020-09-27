@@ -20,7 +20,7 @@ namespace ImpeccableService.Backend.Core.UserManagement
         public Task<ResultWithData<Company>> CreateCompany(RequestContextWithModel<CreateCompanyRequest> createCompanyRequest)
         {
             var company = new Company(Guid.NewGuid().ToString(), createCompanyRequest.Model.Name);
-            return _companyRepository.Create(company);
+            return _companyRepository.Create(company, createCompanyRequest.Identity.Id);
         }
     }
 }

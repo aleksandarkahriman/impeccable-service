@@ -4,7 +4,7 @@ namespace ImpeccableService.Client.Core.UserManagement.Model
 {
     public class AuthenticatedUser : User
     {
-        public AuthenticatedUser(int id, string email, SecurityCredentials securityCredentials) : base(id, email)
+        public AuthenticatedUser(string id, string email, SecurityCredentials securityCredentials) : base(id, email)
         {
             SecurityCredentials = securityCredentials;
         }
