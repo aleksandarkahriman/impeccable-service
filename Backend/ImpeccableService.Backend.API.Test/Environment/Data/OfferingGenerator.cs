@@ -15,7 +15,7 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
 
             context.Venues.Add(venueEntity);
             
-            var menuEntity = new MenuEntity { Id = Guid.NewGuid().ToString(), VenueId = "4ccb" };
+            var menuEntity = new MenuEntity { Id = "5eds", VenueId = "4ccb" };
 
             var englishBreakfastId = Guid.NewGuid().ToString();
             var breakfastItems = new List<MenuItemEntity>

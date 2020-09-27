@@ -14,12 +14,18 @@ namespace ImpeccableService.Backend.Core.Offering
     {
         private readonly IMenuRepository _menuRepository;
         private readonly IVenueRepository _venueRepository;
+        private readonly IMenuSectionRepository _menuSectionRepository;
         private readonly ILogger<MenuService> _logger;
 
-        public MenuService(IMenuRepository menuRepository, IVenueRepository venueRepository, ILogger<MenuService> logger)
+        public MenuService(
+            IMenuRepository menuRepository, 
+            IVenueRepository venueRepository, 
+            IMenuSectionRepository menuSectionRepository,
+            ILogger<MenuService> logger)
         {
             _menuRepository = menuRepository;
             _venueRepository = venueRepository;
+            _menuSectionRepository = menuSectionRepository;
             _logger = logger;
         }
         
@@ -38,6 +44,21 @@ namespace ImpeccableService.Backend.Core.Offering
             
             var menu = new Menu(Guid.NewGuid().ToString(), new List<MenuSection>());
             return await _menuRepository.CreateForVenue(menu, venueResult.Data.Id);
+        }
+
+        public async Task<ResultWithData<MenuSection>> CreateSectionForMenu(RequestContextWithModel<CreateSectionForMenuRequest> createSectionForMenuRequest)
+        {
+            var model = createSectionForMenuRequest.Model;
+            
+            var menuResult = await _menuRepository.Read(model.MenuId);
+            if (menuResult.Failure)
+            {
+                return new ResultWithData<MenuSection>(menuResult.ErrorReason);
+            }
+            
+            var menuSection = new MenuSection(Guid.NewGuid().ToString(), model.Name, new List<MenuItem>());
+
+            return await _menuSectionRepository.CreateForMenu(menuSection, model.MenuId);
         }
     }
 }

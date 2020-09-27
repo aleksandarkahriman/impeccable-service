@@ -126,6 +126,11 @@ namespace ImpeccableService.Backend.API.Test.Offering
         public class CreateMenuForVenue : IClassFixture<EnvironmentFactory>
         {
             private readonly EnvironmentFactory _factory;
+            
+            private readonly string _requestBody = JsonConvert.SerializeObject(new PostMenuDto
+            {
+                Name = "Default"
+            });
 
             public CreateMenuForVenue(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
             {
@@ -146,7 +151,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                     .Authenticate(TestUserRegistry.ValidTestConsumerUser());
                 
                 // Act
-                var body = new StringContent("{}", Encoding.UTF8, "application/json");
+                var body = new StringContent(_requestBody, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/api/venue/4ccb/menu", body);
                 
                 // Assert
@@ -162,7 +167,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                     .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
                 
                 // Act
-                var body = new StringContent("{}", Encoding.UTF8, "application/json");
+                var body = new StringContent(_requestBody, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/api/venue/8er2/menu", body);
                 
                 // Assert
@@ -178,9 +183,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                     .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
                 
                 // Act
-                var postMenuDto = new PostMenuDto();
-                var requestBody = JsonConvert.SerializeObject(postMenuDto);
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/api/venue/4ccb/menu", requestContent);
                 
                 // Assert
@@ -196,9 +199,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                     .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
                 
                 // Act
-                var postMenuDto = new PostMenuDto();
-                var requestBody = JsonConvert.SerializeObject(postMenuDto);
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync("/api/venue/4ccb/menu", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var getMenuDto = JsonConvert.DeserializeObject<GetMenuDto>(responseBody);
@@ -222,9 +223,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 var menuCount = await dbContext.Menus.CountAsync(menu => menu.VenueId == venueId);
 
                 // Act
-                var postMenuDto = new PostMenuDto();
-                var requestBody = JsonConvert.SerializeObject(postMenuDto);
-                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
                 await client.PostAsync($"/api/venue/{venueId}/menu", requestContent);
 
                 // Assert

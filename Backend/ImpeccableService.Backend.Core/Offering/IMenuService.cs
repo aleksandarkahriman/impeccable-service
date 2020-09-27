@@ -11,5 +11,7 @@ namespace ImpeccableService.Backend.Core.Offering
         Task<ResultWithData<Menu>> GetMenuForVenue(RequestContextWithModel<GetMenuForVenueRequest> createMenuForVenueRequest);
 
         Task<ResultWithData<Menu>> CreateMenuForVenue(RequestContextWithModel<CreateMenuForVenueRequest> createMenuForVenueRequest);
+        
+        Task<ResultWithData<MenuSection>> CreateSectionForMenu(RequestContextWithModel<CreateSectionForMenuRequest> createSectionForMenuRequest);
     }
 }

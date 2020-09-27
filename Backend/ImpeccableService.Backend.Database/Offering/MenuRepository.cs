@@ -42,5 +42,13 @@ namespace ImpeccableService.Backend.Database.Offering
             await _dbContext.SaveChangesAsync();
             return new ResultWithData<Menu>(menu);
         }
+
+        public async Task<ResultWithData<Menu>> Read(string id)
+        {
+            var menuEntity = await _dbContext.Menus.FirstOrDefaultAsync(menu => menu.Id == id);
+            return menuEntity != null
+                ? new ResultWithData<Menu>(_mapper.Map<Menu>(menuEntity))
+                : new ResultWithData<Menu>(new KeyNotFoundException($"Menu {id} not found."));
+        }
     }
 }

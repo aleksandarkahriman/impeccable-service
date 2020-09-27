@@ -17,7 +17,7 @@ namespace ImpeccableService.Backend.Database
         
         public DbSet<MenuEntity> Menus { get; set; }
         
-        public DbSet<MenuSectionEntity> MenuSection { get; set; }
+        public DbSet<MenuSectionEntity> MenuSections { get; set; }
         
         public DbSet<VenueEntity> Venues { get; set; }
     }
