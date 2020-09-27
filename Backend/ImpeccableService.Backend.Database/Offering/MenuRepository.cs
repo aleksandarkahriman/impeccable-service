@@ -34,10 +34,12 @@ namespace ImpeccableService.Backend.Database.Offering
                 : new ResultWithData<Menu>(new KeyNotFoundException($"Menu for venue {venueId} not found."));
         }
 
-        public async Task<ResultWithData<Menu>> Create(Menu menu)
+        public async Task<ResultWithData<Menu>> CreateForVenue(Menu menu, string venueId)
         {
             var menuEntity = _mapper.Map<MenuEntity>(menu);
+            menuEntity.VenueId = venueId;
             await _dbContext.Menus.AddAsync(menuEntity);
+            await _dbContext.SaveChangesAsync();
             return new ResultWithData<Menu>(menu);
         }
     }

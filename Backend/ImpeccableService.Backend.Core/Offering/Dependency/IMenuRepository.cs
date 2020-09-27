@@ -8,6 +8,6 @@ namespace ImpeccableService.Backend.Core.Offering.Dependency
     {
         Task<ResultWithData<Menu>> ReadByVenueId(string venueId);
         
-        Task<ResultWithData<Menu>> Create(Menu menu);
+        Task<ResultWithData<Menu>> CreateForVenue(Menu menu, string venueId);
     }
 }

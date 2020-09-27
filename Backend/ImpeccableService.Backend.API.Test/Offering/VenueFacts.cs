@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -5,6 +6,8 @@ using System.Threading.Tasks;
 using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.Test.Environment.Data;
+using ImpeccableService.Backend.Database;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Utility.Test;
 using Xunit;
@@ -78,6 +81,29 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 
                 // Assert
                 Assert.NotEmpty(getVenueDto.Id);
+            }
+
+            [Fact]
+            public async Task PersistsVenue()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                
+                // Act
+                var postVenueDto = new PostVenueDto { Name = "Gentlemen" };
+                var requestBody = JsonConvert.SerializeObject(postVenueDto);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/venue", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getVenueDto = JsonConvert.DeserializeObject<GetVenueDto>(responseBody);
+                
+                // Assert
+                using var scope = _factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var venueEntity = dbContext.Venues.FirstOrDefault(venue => venue.Id == getVenueDto.Id);
+                Assert.NotNull(venueEntity);
             }
         }
     }

@@ -7,6 +7,9 @@ using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.API.Test.Utility;
+using ImpeccableService.Backend.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Utility.Test;
 using Xunit;
@@ -202,6 +205,31 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 
                 // Assert
                 Assert.NotEmpty(getMenuDto.Id);
+            }
+
+            [Fact]
+            public async Task PersistsMenuForVenue()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+
+                const string venueId = "4ccb";
+
+                using var scope = _factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var menuCount = await dbContext.Menus.CountAsync(menu => menu.VenueId == venueId);
+
+                // Act
+                var postMenuDto = new PostMenuDto();
+                var requestBody = JsonConvert.SerializeObject(postMenuDto);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                await client.PostAsync($"/api/venue/{venueId}/menu", requestContent);
+
+                // Assert
+                var newMenuCount = await dbContext.Menus.CountAsync(menu => menu.VenueId == venueId);
+                Assert.True(newMenuCount > menuCount);
             }
         }
     }

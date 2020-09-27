@@ -37,7 +37,7 @@ namespace ImpeccableService.Backend.Core.Offering
             }
             
             var menu = new Menu(Guid.NewGuid().ToString(), new List<MenuSection>());
-            return await _menuRepository.Create(menu);
+            return await _menuRepository.CreateForVenue(menu, venueResult.Data.Id);
         }
     }
 }
