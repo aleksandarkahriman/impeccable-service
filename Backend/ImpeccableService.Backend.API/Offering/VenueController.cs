@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.API.Offering.Dto;
@@ -22,6 +23,13 @@ namespace ImpeccableService.Backend.API.Offering
         {
             _venueService = venueService;
             _mapper = mapper;
+        }
+
+        [HttpGet("venue")]
+        public async Task<IActionResult> GetVenues()
+        {
+            var venuesResult = await _venueService.GetVenues();
+            return Ok(_mapper.Map<List<GetVenueDto>>(venuesResult.Data));
         }
         
         [HttpPost("venue")]

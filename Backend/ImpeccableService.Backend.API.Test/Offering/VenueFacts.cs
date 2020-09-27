@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -17,6 +18,50 @@ namespace ImpeccableService.Backend.API.Test.Offering
 {
     public class VenueFacts
     {
+        public class GetVenues : IClassFixture<EnvironmentFactory>
+        {
+            private readonly EnvironmentFactory _factory;
+
+            public GetVenues(EnvironmentFactory factory, ITestOutputHelper testOutputHelper)
+            {
+                _factory = factory;
+
+                _factory.ConfigureServices(services => { services.AddTestLogger(testOutputHelper); });
+            }
+
+            [Fact]
+            public async Task ReturnsOk()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
+                
+                // Act
+                var response = await client.GetAsync("/api/venue");
+                
+                // Assert
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            }
+
+            [Fact]
+            public async Task ReturnsListOfVenues()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestConsumerUser());
+                
+                // Act
+                var response = await client.GetAsync("/api/venue");
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var venues = JsonConvert.DeserializeObject<List<GetVenueDto>>(responseBody);
+                
+                // Assert
+                Assert.NotEmpty(venues);
+            }
+        }
+
         public class CreateVenue : IClassFixture<EnvironmentFactory>
         {
             private readonly EnvironmentFactory _factory;

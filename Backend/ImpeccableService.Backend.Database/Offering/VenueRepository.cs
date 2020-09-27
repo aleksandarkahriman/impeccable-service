@@ -20,6 +20,12 @@ namespace ImpeccableService.Backend.Database.Offering
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
+        public async Task<ResultWithData<List<Venue>>> Read()
+        {
+            var venueEntities = await _dbContext.Venues.ToListAsync();
+            return new ResultWithData<List<Venue>>(_mapper.Map<List<Venue>>(venueEntities));
+        }
         
         public async Task<ResultWithData<Venue>> Read(string id)
         {

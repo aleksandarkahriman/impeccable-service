@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.Offering.Dependency;
@@ -15,6 +16,11 @@ namespace ImpeccableService.Backend.Core.Offering
         public VenueService(IVenueRepository venueRepository)
         {
             _venueRepository = venueRepository;
+        }
+
+        public Task<ResultWithData<List<Venue>>> GetVenues()
+        {
+            return _venueRepository.Read();
         }
 
         public Task<ResultWithData<Venue>> CreateVenue(RequestContextWithModel<CreateVenueRequest> createVenueRequest)

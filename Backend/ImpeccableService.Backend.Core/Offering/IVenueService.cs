@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.Offering.Model;
@@ -8,6 +9,8 @@ namespace ImpeccableService.Backend.Core.Offering
 {
     public interface IVenueService
     {
+        Task<ResultWithData<List<Venue>>> GetVenues();
+        
         Task<ResultWithData<Venue>> CreateVenue(RequestContextWithModel<CreateVenueRequest> createVenueRequest);
     }
 }
