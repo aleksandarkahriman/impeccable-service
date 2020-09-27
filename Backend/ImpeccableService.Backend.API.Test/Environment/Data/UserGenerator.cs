@@ -13,6 +13,14 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
 
             var validTestProviderAdminUser = TestUserRegistry.ValidTestProviderAdminUser();
             context.Users.Add(mapper.Map<UserEntity>(validTestProviderAdminUser));
+            
+            var validTestProviderCompanyEntity = new CompanyEntity
+            {
+                Id = "39tt",
+                Name = "McDonald's",
+                OwnerId = validTestProviderAdminUser.Id
+            };
+            context.Companies.Add(validTestProviderCompanyEntity);
         }
     }
 }

@@ -36,7 +36,8 @@ namespace ImpeccableService.Backend.API.Offering
         [Authorize(Roles = UserRole.ProviderAdmin)]
         public async Task<IActionResult> CreateVenue(PostVenueDto postVenueDto)
         {
-            var createVenueRequest = new RequestContextWithModel<CreateVenueRequest>(new CreateVenueRequest(postVenueDto.Name));
+            var createVenueRequest = new RequestContextWithModel<CreateVenueRequest>(
+                new CreateVenueRequest(postVenueDto.Name), _mapper.Map<Identity>(User));
             var venueResult = await _venueService.CreateVenue(createVenueRequest);
             return Created(string.Empty, _mapper.Map<GetVenueDto>(venueResult.Data));
         }

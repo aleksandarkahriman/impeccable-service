@@ -7,5 +7,7 @@ namespace ImpeccableService.Backend.Core.UserManagement.Dependency
     public interface ICompanyRepository
     {
         Task<ResultWithData<Company>> Create(Company company, string ownerId);
+        
+        Task<ResultWithData<Company>> ReadByOwner(string ownerId);
     }
 }

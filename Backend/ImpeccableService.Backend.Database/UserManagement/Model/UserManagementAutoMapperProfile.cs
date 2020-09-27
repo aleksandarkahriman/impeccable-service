@@ -11,6 +11,7 @@ namespace ImpeccableService.Backend.Database.UserManagement.Model
             CreateMap<UserEntity, User>();
 
             CreateMap<Company, CompanyEntity>();
+            CreateMap<CompanyEntity, Company>();
         }
     }
 }

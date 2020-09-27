@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ImpeccableService.Backend.Database.UserManagement.Model;
 
 namespace ImpeccableService.Backend.Database.Offering.Model
 {
@@ -10,5 +11,9 @@ namespace ImpeccableService.Backend.Database.Offering.Model
         public string Id { get; set; }
         
         public string Name { get; set; }
+        
+        public string CompanyId { get; set; }
+        
+        public CompanyEntity Company { get; set; }
     }
 }

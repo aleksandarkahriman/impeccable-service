@@ -8,6 +8,7 @@ using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Utility.Test;
@@ -149,6 +150,31 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
                 var venueEntity = dbContext.Venues.FirstOrDefault(venue => venue.Id == getVenueDto.Id);
                 Assert.NotNull(venueEntity);
+            }
+
+            [Fact]
+            public async Task BindsVenueToTheCompanyOfTheCreator()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                
+                // Act
+                var postVenueDto = new PostVenueDto { Name = "Gentlemen" };
+                var requestBody = JsonConvert.SerializeObject(postVenueDto);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/venue", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var getVenueDto = JsonConvert.DeserializeObject<GetVenueDto>(responseBody);
+                
+                // Assert
+                using var scope = _factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var companyEntity = await dbContext.Companies.FirstOrDefaultAsync(company =>
+                    company.OwnerId == TestUserRegistry.ValidTestProviderAdminUser().Id);
+                var venueEntity = await dbContext.Venues.FirstOrDefaultAsync(venue => venue.Id == getVenueDto.Id);
+                Assert.Equal(companyEntity.Id, venueEntity.CompanyId);
             }
         }
     }

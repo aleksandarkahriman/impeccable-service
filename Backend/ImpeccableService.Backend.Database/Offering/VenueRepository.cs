@@ -38,9 +38,10 @@ namespace ImpeccableService.Backend.Database.Offering
                 : new ResultWithData<Venue>(new KeyNotFoundException($"Venue {id} not found."));
         }
 
-        public async Task<ResultWithData<Venue>> Create(Venue venue)
+        public async Task<ResultWithData<Venue>> Create(Venue venue, string companyId)
         {
             var venueEntity = _mapper.Map<VenueEntity>(venue);
+            venueEntity.CompanyId = companyId;
             await _dbContext.Venues.AddAsync(venueEntity);
             await _dbContext.SaveChangesAsync();
             return new ResultWithData<Venue>(venue);

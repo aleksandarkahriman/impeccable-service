@@ -3,6 +3,7 @@ using AutoMapper;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Database.UserManagement.Model;
 using ImpeccableService.Backend.Domain.UserManagement;
+using Microsoft.EntityFrameworkCore;
 using Utility.Application.ResultContract;
 
 namespace ImpeccableService.Backend.Database.UserManagement
@@ -25,6 +26,12 @@ namespace ImpeccableService.Backend.Database.UserManagement
             await _dbContext.Companies.AddAsync(companyEntity);
             await _dbContext.SaveChangesAsync();
             return new ResultWithData<Company>(company);
+        }
+
+        public async Task<ResultWithData<Company>> ReadByOwner(string ownerId)
+        {
+            var companyEntity = await _dbContext.Companies.FirstOrDefaultAsync(company => company.OwnerId == ownerId);
+            return new ResultWithData<Company>(_mapper.Map<Company>(companyEntity));
         }
     }
 }
