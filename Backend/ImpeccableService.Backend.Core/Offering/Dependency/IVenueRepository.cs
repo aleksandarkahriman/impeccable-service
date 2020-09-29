@@ -11,6 +11,6 @@ namespace ImpeccableService.Backend.Core.Offering.Dependency
 
         Task<ResultWithData<Venue>> Read(string id);
 
-        Task<ResultWithData<Venue>> Create(Venue venue, string companyId);
+        Task<ResultWithData<Venue>> Create(Venue venue);
     }
 }

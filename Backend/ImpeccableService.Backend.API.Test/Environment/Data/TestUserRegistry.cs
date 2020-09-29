@@ -14,5 +14,10 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
         {
             return new User("7rti", "charlie@gmail.com", "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg=" /* 12345678 */, UserRole.ProviderAdmin, new DefaultUserProfileImage());
         }
+        
+        public static User ValidTestProviderAdminUserWithoutCompany()
+        {
+            return new User("8r5q", "ana@gmail.com", "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg=" /* 12345678 */, UserRole.ProviderAdmin, new DefaultUserProfileImage());
+        }
     }
 }

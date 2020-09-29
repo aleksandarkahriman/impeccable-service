@@ -28,9 +28,9 @@ namespace ImpeccableService.Backend.Core.Offering
 
         public async Task<ResultWithData<Venue>> CreateVenue(RequestContextWithModel<CreateVenueRequest> createVenueRequest)
         {
-            var venue = new Venue(Guid.NewGuid().ToString(), createVenueRequest.Model.Name);
             var companyResult = await _companyRepository.ReadByOwner(createVenueRequest.Identity.Id);
-            return await _venueRepository.Create(venue, companyResult.Data.Id);
+            var venue = new Venue(Guid.NewGuid().ToString(), createVenueRequest.Model.Name, companyResult.Data.Id);
+            return await _venueRepository.Create(venue);
         }
     }
 }

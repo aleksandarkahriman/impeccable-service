@@ -11,7 +11,7 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
     {
         internal static void AddTestOfferings(this ApplicationDbContext context)
         {
-            var venueEntity = new VenueEntity { Id = "4ccb", Name = "Corso"};
+            var venueEntity = new VenueEntity { Id = "4ccb", Name = "Corso", CompanyId = "39tt"};
 
             context.Venues.Add(venueEntity);
             

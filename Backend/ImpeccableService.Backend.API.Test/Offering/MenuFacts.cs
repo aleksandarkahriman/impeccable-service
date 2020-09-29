@@ -159,6 +159,22 @@ namespace ImpeccableService.Backend.API.Test.Offering
             }
 
             [Fact]
+            public async Task ReturnsForbiddenForVenueThatIsNotOwnedByUser()
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserWithoutCompany());
+                
+                // Act
+                var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/venue/4ccb/menu", requestContent);
+                
+                // Assert
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+
+            [Fact]
             public async Task ReturnsNotFoundForAnInvalidVenue()
             {
                 // Arrange

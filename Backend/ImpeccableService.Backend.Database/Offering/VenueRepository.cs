@@ -31,6 +31,7 @@ namespace ImpeccableService.Backend.Database.Offering
         {
             var venueEntity = await _dbContext.Venues
                 .Where(venue => venue.Id == id)
+                .Include(venue => venue.Company)
                 .FirstOrDefaultAsync();
 
             return venueEntity != null
@@ -38,10 +39,9 @@ namespace ImpeccableService.Backend.Database.Offering
                 : new ResultWithData<Venue>(new KeyNotFoundException($"Venue {id} not found."));
         }
 
-        public async Task<ResultWithData<Venue>> Create(Venue venue, string companyId)
+        public async Task<ResultWithData<Venue>> Create(Venue venue)
         {
             var venueEntity = _mapper.Map<VenueEntity>(venue);
-            venueEntity.CompanyId = companyId;
             await _dbContext.Venues.AddAsync(venueEntity);
             await _dbContext.SaveChangesAsync();
             return new ResultWithData<Venue>(venue);

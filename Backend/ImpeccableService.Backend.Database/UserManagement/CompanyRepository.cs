@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.Core.UserManagement.Dependency;
@@ -31,7 +32,9 @@ namespace ImpeccableService.Backend.Database.UserManagement
         public async Task<ResultWithData<Company>> ReadByOwner(string ownerId)
         {
             var companyEntity = await _dbContext.Companies.FirstOrDefaultAsync(company => company.OwnerId == ownerId);
-            return new ResultWithData<Company>(_mapper.Map<Company>(companyEntity));
+            return companyEntity != null
+                ? new ResultWithData<Company>(_mapper.Map<Company>(companyEntity))
+                : new ResultWithData<Company>(new KeyNotFoundException($"Company for owner with {ownerId} not found."));
         }
     }
 }

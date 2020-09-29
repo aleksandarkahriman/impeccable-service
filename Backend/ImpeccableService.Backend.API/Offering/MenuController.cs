@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.API.Offering.Dto;
@@ -38,8 +39,13 @@ namespace ImpeccableService.Backend.API.Offering
         [Authorize(Roles = UserRole.ProviderAdmin)]
         public async Task<IActionResult> CreateMenuForVenue(string venueId, PostMenuDto postMenuDto)
         {
-            var menuResult = await _menuService.CreateMenuForVenue(
-                new RequestContextWithModel<CreateMenuForVenueRequest>(new CreateMenuForVenueRequest(venueId)));
+            var menuResult = await _menuService.CreateMenuForVenue(new RequestContextWithModel<CreateMenuForVenueRequest>(
+                new CreateMenuForVenueRequest(venueId), _mapper.Map<Identity>(User)));
+
+            if (menuResult.Failure && menuResult.ErrorReason is UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
 
             return menuResult.Success
                 ? Created(string.Empty, _mapper.Map<GetMenuDto>(menuResult.Data))

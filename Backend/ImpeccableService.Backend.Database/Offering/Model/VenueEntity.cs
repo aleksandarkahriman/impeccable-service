@@ -12,6 +12,7 @@ namespace ImpeccableService.Backend.Database.Offering.Model
         
         public string Name { get; set; }
         
+        [Required]
         public string CompanyId { get; set; }
         
         public CompanyEntity Company { get; set; }
