@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ImpeccableService.Backend.Core.Context;
 using ImpeccableService.Backend.Core.Offering.Dependency;
 using ImpeccableService.Backend.Core.Offering.Model;
-using ImpeccableService.Backend.Core.UserManagement.Dependency;
 using ImpeccableService.Backend.Domain.Offering;
 using Logger.Abstraction;
 using Utility.Application.ResultContract;

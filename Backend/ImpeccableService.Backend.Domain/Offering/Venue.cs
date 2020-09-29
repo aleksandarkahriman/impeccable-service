@@ -1,5 +1,3 @@
-using ImpeccableService.Backend.Domain.UserManagement;
-
 namespace ImpeccableService.Backend.Domain.Offering
 {
     public class Venue
