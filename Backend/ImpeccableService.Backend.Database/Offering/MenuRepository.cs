@@ -50,5 +50,17 @@ namespace ImpeccableService.Backend.Database.Offering
                 ? new ResultWithData<Menu>(_mapper.Map<Menu>(menuEntity))
                 : new ResultWithData<Menu>(new KeyNotFoundException($"Menu {id} not found."));
         }
+
+        public async Task<Result> IsOwnedByCompany(string menuId, string companyId)
+        {
+            var menuEntity = await _dbContext.Menus
+                .Include(menu => menu.Venue)
+                .ThenInclude(venue => venue.Company)
+                .FirstOrDefaultAsync(menu => menu.Id == menuId && menu.Venue.Company.Id == companyId);
+
+            return menuEntity != null
+                ? Result.Ok()
+                : new Result(new KeyNotFoundException());
+        }
     }
 }

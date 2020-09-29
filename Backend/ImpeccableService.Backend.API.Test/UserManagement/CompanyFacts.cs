@@ -60,7 +60,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent("{}", Encoding.UTF8, "application/json");
@@ -76,7 +76,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent(Request, Encoding.UTF8, "application/json");
@@ -94,7 +94,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 using var scope = _factory.Services.CreateScope();
                 var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
@@ -115,7 +115,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
 
                 // Act
                 var requestContent = new StringContent(Request, Encoding.UTF8, "application/json");
@@ -127,7 +127,7 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 using var scope = _factory.Services.CreateScope();
                 var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
                 var companyEntity = await dbContext.Companies.FirstOrDefaultAsync(company => company.Id == getCompanyDto.Id);
-                Assert.Equal(TestUserRegistry.ValidTestProviderAdminUser().Id, companyEntity.OwnerId);
+                Assert.Equal(TestUserRegistry.ValidTestProviderAdminUserOne().Id, companyEntity.OwnerId);
             }
         }
     }

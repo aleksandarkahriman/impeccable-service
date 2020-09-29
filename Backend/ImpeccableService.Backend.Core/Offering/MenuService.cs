@@ -52,7 +52,7 @@ namespace ImpeccableService.Backend.Core.Offering
             var userCompanyResult = await _companyRepository.ReadByOwner(createMenuForVenueRequest.Identity.Id);
             if (userCompanyResult.Failure || venueOwnerCompanyId != userCompanyResult.Data.Id)
             {
-                _logger.Warning("User attempting to create a menu for a company he doesn't work for.");
+                _logger.Warning($"User with id {createMenuForVenueRequest.Identity.Id} attempting to create a menu for a company he doesn't work for.");
                 return new ResultWithData<Menu>(new UnauthorizedAccessException("User does not own resource."));
             }
             
@@ -66,9 +66,24 @@ namespace ImpeccableService.Backend.Core.Offering
             var menuResult = await _menuRepository.Read(model.MenuId);
             if (menuResult.Failure)
             {
+                _logger.Warning(menuResult.ErrorReason, $"Menu with id {model.MenuId} does not exist.");
                 return new ResultWithData<MenuSection>(menuResult.ErrorReason);
             }
             
+            var userCompanyResult = await _companyRepository.ReadByOwner(createSectionForMenuRequest.Identity.Id);
+            if (userCompanyResult.Failure)
+            {
+                _logger.Warning(userCompanyResult.ErrorReason, "User attempting to create a menu section without working for any company.");
+                return new ResultWithData<MenuSection>(new UnauthorizedAccessException());
+            }
+
+            var companyOwnsMenuResult = await _menuRepository.IsOwnedByCompany(menuResult.Data.Id, userCompanyResult.Data.Id);
+            if (companyOwnsMenuResult.Failure)
+            {
+                _logger.Warning($"User with id {createSectionForMenuRequest.Identity.Id} attempting to create a menu section for a company he doesn't work for.");
+                return new ResultWithData<MenuSection>(new UnauthorizedAccessException());
+            }
+
             var menuSection = new MenuSection(Guid.NewGuid().ToString(), model.Name, new List<MenuItem>());
 
             return await _menuSectionRepository.CreateForMenu(menuSection, model.MenuId);

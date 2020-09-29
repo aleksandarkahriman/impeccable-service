@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -6,6 +8,7 @@ using ImpeccableService.Backend.API.Offering.Dto;
 using ImpeccableService.Backend.API.Test.Environment;
 using ImpeccableService.Backend.API.Test.Environment.Data;
 using ImpeccableService.Backend.Database;
+using ImpeccableService.Backend.Domain.UserManagement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -49,13 +52,30 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             }
             
+            [Theory]
+            [ClassData(typeof(UsersThatDoNotWorkForCompany))]
+            public async Task ReturnsForbiddenForIntruders(User user)
+            {
+                // Arrange
+                var client = await _factory
+                    .CreateClient()
+                    .Authenticate(user);
+                
+                // Act
+                var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("/api/menu/5eds/section", requestContent);
+                
+                // Assert
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+            
             [Fact]
             public async Task ReturnsNotFoundForAnInvalidMenu()
             {
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
@@ -71,7 +91,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
@@ -87,7 +107,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
 
                 const string menuId = "5eds";
 
@@ -102,6 +122,17 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Assert
                 var newSectionsCount = await dbContext.MenuSections.CountAsync(section => section.MenuId == menuId);
                 Assert.True(newSectionsCount > sectionsCount);
+            }
+
+            private class UsersThatDoNotWorkForCompany : IEnumerable<object[]>
+            {
+                public IEnumerator<object[]> GetEnumerator()
+                {
+                    yield return new object[] { TestUserRegistry.ValidTestProviderAdminUserWithoutCompany() };
+                    yield return new object[] {TestUserRegistry.ValidTestProviderAdminUserTwo() };
+                }
+                
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
             }
         }
     }

@@ -10,9 +10,14 @@ namespace ImpeccableService.Backend.API.Test.Environment.Data
             return new User("1q9j", "frank@gmail.com", "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg=" /* 12345678 */, UserRole.Consumer, new DefaultUserProfileImage());
         }
 
-        public static User ValidTestProviderAdminUser()
+        public static User ValidTestProviderAdminUserOne()
         {
             return new User("7rti", "charlie@gmail.com", "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg=" /* 12345678 */, UserRole.ProviderAdmin, new DefaultUserProfileImage());
+        }
+        
+        public static User ValidTestProviderAdminUserTwo()
+        {
+            return new User("kcs0", "alex@gmail.com", "MkXJOXJ0Wqit/kKiVHQNrwsFw8vOVVckX1npNw+2qIg=" /* 12345678 */, UserRole.ProviderAdmin, new DefaultUserProfileImage());
         }
         
         public static User ValidTestProviderAdminUserWithoutCompany()

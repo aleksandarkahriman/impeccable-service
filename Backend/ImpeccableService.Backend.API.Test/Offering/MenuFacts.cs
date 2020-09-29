@@ -180,7 +180,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var body = new StringContent(_requestBody, Encoding.UTF8, "application/json");
@@ -196,7 +196,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
@@ -212,7 +212,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var requestContent = new StringContent(_requestBody, Encoding.UTF8, "application/json");
@@ -230,7 +230,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
 
                 const string venueId = "4ccb";
 

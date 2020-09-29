@@ -12,6 +12,8 @@ namespace ImpeccableService.Backend.Database.Offering.Model
         
         public string VenueId { get; set; }
         
+        public VenueEntity Venue { get; set; }
+        
         public List<MenuSectionEntity> Sections { get; set; }
     }
 }

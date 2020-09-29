@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using ImpeccableService.Backend.API.Offering.Dto;
@@ -29,15 +31,20 @@ namespace ImpeccableService.Backend.API.Offering
         public async Task<IActionResult> CreateSectionForMenu(string menuId, PostMenuSectionDto postMenuDto)
         {
             var createSectionForMenuRequest = new CreateSectionForMenuRequest(menuId, postMenuDto.Name);
-            var sectionResult = await _menuService.CreateSectionForMenu(
-                    new RequestContextWithModel<CreateSectionForMenuRequest>(createSectionForMenuRequest));
+            var sectionResult = await _menuService.CreateSectionForMenu(new RequestContextWithModel<CreateSectionForMenuRequest>(
+                createSectionForMenuRequest, _mapper.Map<Identity>(User)));
 
-            if (sectionResult.Failure)
+            if (sectionResult.Failure && sectionResult.ErrorReason is KeyNotFoundException)
             {
                 return NotFound();
             }
+
+            if (sectionResult.Failure && sectionResult.ErrorReason is UnauthorizedAccessException)
+            {
+                return Forbid();
+            }
             
-            return Created(string.Empty, null);
+            return Created(string.Empty, _mapper.Map<GetMenuSectionDto>(sectionResult.Data));
         }
     }
 }

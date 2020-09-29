@@ -99,7 +99,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var body = new StringContent("{}", Encoding.UTF8, "application/json");
@@ -115,7 +115,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var postVenueDto = new PostVenueDto { Name = "Gentlemen" };
@@ -135,7 +135,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var postVenueDto = new PostVenueDto { Name = "Gentlemen" };
@@ -158,7 +158,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 // Arrange
                 var client = await _factory
                     .CreateClient()
-                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUser());
+                    .Authenticate(TestUserRegistry.ValidTestProviderAdminUserOne());
                 
                 // Act
                 var postVenueDto = new PostVenueDto { Name = "Gentlemen" };
@@ -172,7 +172,7 @@ namespace ImpeccableService.Backend.API.Test.Offering
                 using var scope = _factory.Services.CreateScope();
                 var dbContext = scope.ServiceProvider.GetService<ApplicationDbContext>();
                 var companyEntity = await dbContext.Companies.FirstOrDefaultAsync(company =>
-                    company.OwnerId == TestUserRegistry.ValidTestProviderAdminUser().Id);
+                    company.OwnerId == TestUserRegistry.ValidTestProviderAdminUserOne().Id);
                 var venueEntity = await dbContext.Venues.FirstOrDefaultAsync(venue => venue.Id == getVenueDto.Id);
                 Assert.Equal(companyEntity.Id, venueEntity.CompanyId);
             }

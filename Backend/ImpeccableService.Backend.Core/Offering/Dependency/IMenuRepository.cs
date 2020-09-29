@@ -11,5 +11,7 @@ namespace ImpeccableService.Backend.Core.Offering.Dependency
         Task<ResultWithData<Menu>> CreateForVenue(Menu menu, string venueId);
         
         Task<ResultWithData<Menu>> Read(string id);
+        
+        Task<Result> IsOwnedByCompany(string menuId, string companyId);
     }
 }
