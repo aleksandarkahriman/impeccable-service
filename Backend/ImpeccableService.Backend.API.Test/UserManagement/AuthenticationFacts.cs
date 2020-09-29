@@ -156,6 +156,29 @@ namespace ImpeccableService.Backend.API.Test.UserManagement
                 var token = handler.ReadJwtToken(authenticationCredentials.AccessToken);
                 Assert.True(DateTime.UtcNow < token.ValidTo);
             }
+            
+            [Fact]
+            public async Task ProvidesCompanyOwnershipClaimIfPresent()
+            {
+                // Arrange
+                var client = _factory.CreateClient();
+
+                var emailLogin = new EmailLoginDto("charlie@gmail.com", "12345678");
+                var requestBody = JsonConvert.SerializeObject(emailLogin);
+                var requestContent = new StringContent(requestBody, Encoding.UTF8, "application/json");
+
+                // Act
+                var response = await client.PostAsync("/api/authentication/login", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var authenticationCredentials =
+                    JsonConvert.DeserializeObject<AuthenticationCredentialsDto>(responseBody);
+
+                // Assert
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(authenticationCredentials.AccessToken);
+                var companyOwnershipClaim = token.Claims.FirstOrDefault(claim => claim.Type == "companyOwnership");
+                Assert.Equal("39tt", companyOwnershipClaim.Value);
+            }
         }
 
         public class AuthenticationMiddleware : IClassFixture<EnvironmentFactory>

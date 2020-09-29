@@ -19,8 +19,9 @@ namespace ImpeccableService.Backend.API.UserManagement.Dto
                 {
                     var id = principal.FindFirstValue(ClaimTypes.PrimarySid);
                     var email = principal.FindFirstValue(ClaimTypes.Email);
+                    var companyOwnership = principal.FindFirstValue("companyOwnership");
 
-                    return new Identity(id, email);
+                    return new Identity(id, email, companyOwnership);
                 });
 
             CreateMap<User, GetUserProfileDto>();

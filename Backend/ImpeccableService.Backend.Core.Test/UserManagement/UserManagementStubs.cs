@@ -9,6 +9,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
         public static IServiceCollection AddUserManagementStubs(this IServiceCollection services)
         {
             services.AddScoped<ISecurityEnvironmentVariables, SecurityEnvironmentVariablesStub>();
+            services.AddScoped<ICompanyRepository, CompanyRepositoryStub>();
 
             return services;
         }

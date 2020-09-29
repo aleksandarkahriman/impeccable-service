@@ -10,9 +10,13 @@ namespace ImpeccableService.Backend.Database.Offering.Model
         [Key]
         public string Id { get; set; }
         
+        [Required]
         public string VenueId { get; set; }
         
         public VenueEntity Venue { get; set; }
+        
+        [Required]
+        public string CompanyId { get; set; }
         
         public List<MenuSectionEntity> Sections { get; set; }
     }

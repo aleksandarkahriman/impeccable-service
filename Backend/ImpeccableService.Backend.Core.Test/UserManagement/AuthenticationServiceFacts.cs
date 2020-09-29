@@ -134,6 +134,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             {
                 var services = new ServiceCollection();
                 services.AddCore();
+                services.AddUserManagementStubs();
                 services.AddTestLogger(testOutputHelper);
 
                 _userRepositoryMock = new Mock<IUserRepository>();
@@ -349,6 +350,7 @@ namespace ImpeccableService.Backend.Core.Test.UserManagement
             {
                 var services = new ServiceCollection();
                 services.AddCore();
+                services.AddUserManagementStubs();
                 services.AddTestLogger(testOutputHelper);
 
                 _userRepositoryMock = new Mock<IUserRepository>();

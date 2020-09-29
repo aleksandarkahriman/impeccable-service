@@ -17,20 +17,17 @@ namespace ImpeccableService.Backend.Core.Offering
         private readonly IMenuRepository _menuRepository;
         private readonly IVenueRepository _venueRepository;
         private readonly IMenuSectionRepository _menuSectionRepository;
-        private readonly ICompanyRepository _companyRepository;
         private readonly ILogger<MenuService> _logger;
 
         public MenuService(
             IMenuRepository menuRepository, 
             IVenueRepository venueRepository, 
             IMenuSectionRepository menuSectionRepository,
-            ICompanyRepository companyRepository,
             ILogger<MenuService> logger)
         {
             _menuRepository = menuRepository;
             _venueRepository = venueRepository;
             _menuSectionRepository = menuSectionRepository;
-            _companyRepository = companyRepository;
             _logger = logger;
         }
         
@@ -49,14 +46,13 @@ namespace ImpeccableService.Backend.Core.Offering
             }
 
             var venueOwnerCompanyId = venueResult.Data.CompanyId;
-            var userCompanyResult = await _companyRepository.ReadByOwner(createMenuForVenueRequest.Identity.Id);
-            if (userCompanyResult.Failure || venueOwnerCompanyId != userCompanyResult.Data.Id)
+            if (venueOwnerCompanyId != createMenuForVenueRequest.Identity.CompanyOwnership)
             {
                 _logger.Warning($"User with id {createMenuForVenueRequest.Identity.Id} attempting to create a menu for a company he doesn't work for.");
                 return new ResultWithData<Menu>(new UnauthorizedAccessException("User does not own resource."));
             }
             
-            var menu = new Menu(Guid.NewGuid().ToString(), new List<MenuSection>());
+            var menu = new Menu(Guid.NewGuid().ToString(), createMenuForVenueRequest.Identity.CompanyOwnership, new List<MenuSection>());
             return await _menuRepository.CreateForVenue(menu, venueResult.Data.Id);
         }
 
@@ -69,16 +65,8 @@ namespace ImpeccableService.Backend.Core.Offering
                 _logger.Warning(menuResult.ErrorReason, $"Menu with id {model.MenuId} does not exist.");
                 return new ResultWithData<MenuSection>(menuResult.ErrorReason);
             }
-            
-            var userCompanyResult = await _companyRepository.ReadByOwner(createSectionForMenuRequest.Identity.Id);
-            if (userCompanyResult.Failure)
-            {
-                _logger.Warning(userCompanyResult.ErrorReason, "User attempting to create a menu section without working for any company.");
-                return new ResultWithData<MenuSection>(new UnauthorizedAccessException());
-            }
 
-            var companyOwnsMenuResult = await _menuRepository.IsOwnedByCompany(menuResult.Data.Id, userCompanyResult.Data.Id);
-            if (companyOwnsMenuResult.Failure)
+            if (menuResult.Data.CompanyId != createSectionForMenuRequest.Identity.CompanyOwnership)
             {
                 _logger.Warning($"User with id {createSectionForMenuRequest.Identity.Id} attempting to create a menu section for a company he doesn't work for.");
                 return new ResultWithData<MenuSection>(new UnauthorizedAccessException());

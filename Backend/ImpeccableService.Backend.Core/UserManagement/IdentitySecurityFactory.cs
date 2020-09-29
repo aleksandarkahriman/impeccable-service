@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -16,11 +17,14 @@ namespace ImpeccableService.Backend.Core.UserManagement
     internal class IdentitySecurityFactory
     {
         private readonly ISecurityEnvironmentVariables _securityEnvironmentVariables;
+        private readonly ICompanyRepository _companyRepository;
 
         public IdentitySecurityFactory(
-            ISecurityEnvironmentVariables securityEnvironmentVariables)
+            ISecurityEnvironmentVariables securityEnvironmentVariables,
+            ICompanyRepository companyRepository)
         {
             _securityEnvironmentVariables = securityEnvironmentVariables;
+            _companyRepository = companyRepository;
         }
 
         public string HashPassword(string password)
@@ -48,18 +52,26 @@ namespace ImpeccableService.Backend.Core.UserManagement
 
         private async Task<string> GenerateAccessToken(User user)
         {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.PrimarySid, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+            
+            var companyResult = await _companyRepository.ReadByOwner(user.Id);
+            if (companyResult.Success)
+            {
+                claims.Add(new Claim("companyOwnership", companyResult.Data.Id));
+            }
+
             var secret = await _securityEnvironmentVariables.SecurityCredentialsSecret();
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.PrimarySid, user.Id),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.Role) 
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _securityEnvironmentVariables.SecurityCredentialsIssuer()
